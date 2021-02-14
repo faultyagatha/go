@@ -6,32 +6,31 @@ var trueFalse bool
 
 var hello string
 
+//int int8  int16  int32  int64
 var simpleInt int
 
-//int8  int16  int32  int64
+// uint uint8 uint16 uint32 uint64 uintptr
 var unsignedInt uint
-
-//uint8 uint16 uint32 uint64 uintptr
 
 var uint8Alias byte // alias for uint8
 
 var int32Alias rune // alias for int32
 // represents a Unicode code point
 
-var smalFloat float32
-var largeFloat float64
+var smalFloat float32  //6 digits of precision
+var largeFloat float64 //15 digits of precision
 
 var complexNum complex64
 var veryLargeCmplexNum complex128
 
-//INIT VALUES
+//********* INIT VALUES
 /** uninitialised variables will have 0 values:
 - 0 for numeric types,
 - false for the boolean type, and
 - "" (the empty string) for strings
 */
 
-//CASTING T(v)
+//********* CASTING T(v)
 var i int = 42
 var f float64 = float64(i)
 var u uint = uint(f)
@@ -40,28 +39,28 @@ var u uint = uint(f)
 // f := float64(i)
 // u := uint(f)
 
-//IMPORTANT: assignment between items of different type requires an explicit conversion!!
+//********* IMPORTANT: assignment between items of different type requires an explicit conversion!!
 
-//TYPE INFERENCE:
+//********* TYPE INFERENCE:
 var x int
 
 //y := x // y is an int, only possible inside of a function
 
 const World = "世界" //cannot be declared using := syntax
 
-//SCOPING:
+//********* SCOPING:
 var xScoped int = 4
 
 func f1() {
-	fmt.Printf(`%d`, xScoped)
+	fmt.Printf("%d", xScoped)
 }
 
 func f2() {
 	var xScoped int = 5
-	fmt.Printf(`%d`, xScoped)
+	fmt.Printf("%d", xScoped)
 }
 
-//POINTERS:
+//********* POINTERS:
 func main() {
 	var x1 int = 1
 	var y1 int
