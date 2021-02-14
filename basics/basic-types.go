@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 var trueFalse bool
 
 var hello string
@@ -46,3 +48,34 @@ var x int
 //y := x // y is an int, only possible inside of a function
 
 const World = "世界" //cannot be declared using := syntax
+
+//SCOPING:
+var xScoped int = 4
+
+func f1() {
+	fmt.Printf(`%d`, xScoped)
+}
+
+func f2() {
+	var xScoped int = 5
+	fmt.Printf(`%d`, xScoped)
+}
+
+//POINTERS:
+func main() {
+	var x1 int = 1
+	var y1 int
+	var ip *int //declared as a pointer to an int
+	ip = &x1
+	y1 = *ip
+	fmt.Println("x1 ", x1)
+	fmt.Println("y1 ", y1)
+
+	//new() function creates a var and returns a pointer to the var
+	var x2 *int = new(int) //or x2 := new(int)
+	fmt.Println("x2 ", x2) //prints some address: 0xc000012080
+	*x2 = 3
+	fmt.Println("x2 ", *x2) //prints 3
+	f1()
+	f2()
+}
