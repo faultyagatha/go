@@ -9,7 +9,7 @@ type Vertex struct {
 
 func main() {
 	fmt.Println(Vertex{1, 2})
-	v := Vertex{1, 2}
+	v := Vertex{1, 2} //can be also initialised using new()
 	v.X = 4
 	fmt.Println(v)
 }
