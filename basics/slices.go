@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 /* slice is an array-like data type:
 - can be size-flexible, up to a size of an array
@@ -9,6 +12,17 @@ import "fmt"
 	1. pointer: start of the slice
 	2. length: the number of elements in the slice: len()
 	3. capacity: maximum number of elements: cap()
+
+	a[low : high] //includes 1 and excludes last elem
+	var a [10]int
+	a[0:10]
+	a[:10]
+	a[0:]
+	a[:]
+
+	IMPORTANT:
+	A slice does not store any data, it just describes a section of an underlying array.
+	Changing the elements of a slice modifies the corresponding elements of its underlying array.
 */
 
 func sliceExample() {
@@ -26,6 +40,7 @@ func sliceLiteral() {
 }
 
 //creates a slice with init vals of 0
+//helps to create dynamically-sized arrays
 func sliceMake() {
 	sli := make([]int, 10) //init to 0 ith length 10
 	fmt.Println("sli: ", sli)
@@ -41,8 +56,44 @@ func sliceAppend() {
 	sli = append(sli, 100)
 }
 
+func namesSlice() {
+	names := [4]string{
+		"John",
+		"Paul",
+		"George",
+		"Ringo",
+	}
+	a := names[0:2]
+	b := names[1:3]
+	fmt.Println(a, b)
+	b[0] = "XXX"
+	fmt.Println(a, b)
+	fmt.Println(names)
+}
+
+func tictactoe() {
+	// Create a tic-tac-toe board.
+	board := [][]string{
+		[]string{"_", "_", "_"},
+		[]string{"_", "_", "_"},
+		[]string{"_", "_", "_"},
+	}
+	// The players take turns.
+	board[0][0] = "X"
+	board[2][2] = "O"
+	board[1][2] = "X"
+	board[1][0] = "O"
+	board[0][2] = "X"
+
+	for i := 0; i < len(board); i++ {
+		fmt.Printf("%s\n", strings.Join(board[i], " "))
+	}
+}
+
 func main() {
 	sliceExample()
 	sliceLiteral()
 	sliceMake()
+	namesSlice()
+	tictactoe()
 }
