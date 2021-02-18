@@ -3,10 +3,20 @@ package main
 import (
 	"errors"
 	"fmt"
+	"os"
 )
 
 type error interface {
 	Error() string
+}
+
+func readFile() {
+	f, err := os.Open("./test.txt")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(f)
 }
 
 //use it like this:
