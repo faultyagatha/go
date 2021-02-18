@@ -1,6 +1,17 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
+
+//FUNCTIONS IS GO ARE FIRST-CLASS:
+//treated like other types (think Javascript)
+var funcVar func(int) int
+
+func incFn(x int) int {
+	return x + 1
+}
 
 func withReturn(x, y float32) float32 {
 	return x + y
@@ -30,7 +41,7 @@ func passArraysByValue(x [3]int) int {
 	return x[0]
 }
 
-//2. not the best way to do in GO
+//2. not the best way to do in GO but possible
 func passArraysByRef(x *[3]int) {
 	(*x)[0] = (*x)[0] + 1
 }
@@ -44,7 +55,38 @@ func passArraysBySlice(sli []int) {
 	sli[0] = sli[0] + 1
 }
 
+//function defines a function and returns a function
+func makeDistOrigin(o_x, o_y float64) func(float64, float64) float64 {
+	fn := func(x, y float64) float64 {
+		return math.Sqrt(math.Pow(x-o_x, 2) + math.Pow(y-o_y, 2))
+	}
+	return fn
+}
+
+//VARIADIC FUNCTION
+//takes an arbitrary num of ints or
+//we can also pass a slice of ints
+func getMax(vals ...int) int {
+	maxV := -1
+	for _, v := range vals {
+		if v > maxV {
+			maxV = v
+		}
+	}
+	return maxV
+}
+
+//DEFERRED FUNCTION
+//typically for clean up
+//called only when the surrounding function completes
+//IMPORTANT: the arguments are evaluated immediately
+//but the call of the function is deferred
+
 func main() {
+	defer fmt.Println("Bye!")
+	funcVar = incFn
+	fmt.Print(funcVar(1))
+
 	y := withReturn(19.9, 1.1)
 	fmt.Println(y)
 
@@ -68,4 +110,13 @@ func main() {
 	ar3 := []int{1, 2, 3} //this is a slice
 	passArraysBySlice(ar3)
 	fmt.Println(ar3)
+
+	dist1 := makeDistOrigin(0, 2)
+	dist2 := makeDistOrigin(2, 3)
+	fmt.Println(dist1(2, 2)) //2
+	fmt.Println(dist2(2, 2)) //1
+
+	fmt.Println(getMax(1, 3, 6, 4)) //6
+	vslice := []int{1, 3, 6, 4}
+	fmt.Println(getMax(vslice...)) //6: ...suffix is necessary
 }

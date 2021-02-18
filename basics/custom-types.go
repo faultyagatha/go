@@ -2,14 +2,6 @@ package main
 
 import "fmt"
 
-func main() {
-	lst, _ := searchAll(5)
-
-	for _, item := range lst {
-		fmt.Printf("%#v\n", item)
-	}
-}
-
 type Contacts []Contact
 
 type Contact struct {
@@ -36,4 +28,26 @@ func searchAll(limit int) (Contacts, error) {
 		lst = append(lst, con)
 	}
 	return lst, nil
+}
+
+type MyInt int
+
+//this is how in Go we associate methods with data
+//note (mi MyInt) - receiver type to be called on
+//in the receiver type, there is a hidden arg that is
+//passed automatically by value
+//in this case, v will be passed
+func (mi MyInt) Double() int {
+	return int(mi * 2)
+}
+
+func main() {
+	lst, _ := searchAll(5)
+
+	for _, item := range lst {
+		fmt.Printf("%#v\n", item)
+	}
+
+	v := MyInt(3)
+	fmt.Println(v.Double())
 }

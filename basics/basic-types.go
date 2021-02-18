@@ -35,6 +35,7 @@ var i int = 42
 var f float64 = float64(i)
 var u uint = uint(f)
 
+//********* COMPACT SYNTAX CAN BE USED ONLY INSIDE OF A FUNC SCOPE
 // i := 42
 // f := float64(i)
 // u := uint(f)
