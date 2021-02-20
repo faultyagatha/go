@@ -20,7 +20,8 @@ Uninitialised values are implicitely initialised with `0`, `nil`, or `''` depend
 
 Polymorphism is achieved with `structs` that can have member functions (sort of). It's done externally, in the code (see examples).
 
-Uses `interfaces` (method signatures), same as Typescript. 
+Uses `interfaces` (method signatures), same as Typescript. Unlike, Typescript, in Go a `type` implements an interface by implementing its methods. There is no explicit declaration of intent, no "implements" keyword.
+Under the hood, interface values can be thought of as a tuple of a value and a concrete type: `(value, type)`
 
 `Concurrency` is build in.
 
@@ -391,7 +392,23 @@ func main() {
 
 ```
 
+`channels`: a typed conduit through which you can send and receive values with the channel operator, `<-`
+
+```go
+ch <- v    // Send v to channel ch.
+v := <-ch  // Receive from ch, and
+           // assign value to v.
+```
+
+created with `make()`
+
+```go
+intChannel := make(chan int)
+```
+
 ### Other
+
+
 
 `panic`
 

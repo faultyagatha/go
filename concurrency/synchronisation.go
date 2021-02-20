@@ -2,16 +2,23 @@ package main
 
 import (
 	"fmt"
-	"time"
+	"sync"
 )
 
 //SYNCHRONISATION is using global events whose execution
 //is viewed by all threads, simultaneously
 //synchronisation is used to restrict bad interleavings
 
+func foo(wg *sync.WaitGroup) {
+	fmt.Printf("New routine")
+	wg.Done() //must be called when routine is completed
+}
+
 func main() {
-	go fmt.Printf("New routine")
-	//this is bad cause we make assumptions about time (non-deterministic)
-	time.Sleep(100 * time.Millisecond) //hack to allow "New routine" to be printed
-	fmt.Printf("Main routine")         // without the hack above, prints only "Main routine"
+	//sync package can synchronise between goroutines
+	var wg sync.WaitGroup
+	wg.Add(1) //instance of sync contains internal counter
+	go foo(&wg)
+	wg.Wait()                  //wait for Done() from foo
+	fmt.Printf("Main routine") //main will not be executed until the counter is complete
 }

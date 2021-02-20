@@ -2,6 +2,10 @@ package main
 
 import "fmt"
 
+//type assertion syntax: t := i.(T)
+//t, ok := i.(T)
+//if i does not hold a T, the statement will trigger a panic.
+
 type Shape2D interface {
 	Area() float64
 	Perimeter() float64
@@ -56,14 +60,32 @@ func DrawShapeWithCustomTypeAssertion(s Shape2D) {
 func DrawShapeWithTypeSwich(s Shape2D) {
 	//sh will be a concrete type
 	//that s represents
-	switch := sh := s.(type) {
+	switch sh := s.(type) {
 	case Rectangle:
 		//do something
 		fmt.Println(sh)
 	case Triangle:
-	//do something
-	fmt.Println(sh)
+		//do something
+		fmt.Println(sh)
 	}
 }
 
+//Stringer is defined by fmt package
+// type Stringer interface {
+// 	String() string
+// }
 
+type Person struct {
+	Name string
+	Age  int
+}
+
+func (p Person) String() string {
+	return fmt.Sprintf("%v (%v years)", p.Name, p.Age)
+}
+
+func main() {
+	a := Person{"Arthur Dent", 42}
+	z := Person{"Zaphod Beeblebrox", 9001}
+	fmt.Println(a, z)
+}

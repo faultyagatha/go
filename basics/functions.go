@@ -85,6 +85,18 @@ func getMax(vals ...int) int {
 	return maxV
 }
 
+//we can declare a method on Go types
+//we can only declare a method with a receiver whose type is defined in
+//the same package as the method.
+type MyFloat float64
+
+func (f MyFloat) Abs() float64 {
+	if f < 0 {
+		return float64(-f)
+	}
+	return float64(f)
+}
+
 //DEFERRED FUNCTION
 //typically for clean up
 //called only when the surrounding function completes
@@ -136,4 +148,7 @@ func main() {
 	fmt.Println(getMax(1, 3, 6, 4)) //6
 	vslice := []int{1, 3, 6, 4}
 	fmt.Println(getMax(vslice...)) //6: ...suffix is necessary
+
+	f := MyFloat(-math.Sqrt2)
+	fmt.Println(f.Abs())
 }
