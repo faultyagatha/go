@@ -60,6 +60,7 @@ OS allows many processes to execute concurrently and swithces processes quickly 
 /************ CONCURRENCY IS BUILT-IN IN GO:
 
 GOROUTINS:
+- a function executing concurrently with other goroutines in the same address space
 - like a thread in GO
 - many Goroutines execute within a single OS thread
 
@@ -75,7 +76,7 @@ GO RUNTIME SCHEDULER:
 
 //another goroutine can be created with go keyword
 //when there are other goroutines, main() is non-blocking
-//goroutine exits when it's complete
+//goroutine exits silently when it's complete
 
 func main() {
 	go fmt.Printf("New routine")

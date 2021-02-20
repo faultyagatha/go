@@ -324,9 +324,9 @@ func main() {
 
 `Goroutine` is "a lightweight thread of execution"
 
-Sort of like a Javascript promise except actually concurrent (since JS is forever single-threaded).
+like a Javascript promise except actually concurrent (since JS is single-threaded)
 
-```
+```go
 func f(arg int) int {
   return arg
 }
@@ -341,21 +341,17 @@ go func(msg string) {
 }("GOING ASYNC ANON")
 ```
 
-### Timers
-
 `timer`
 
-Basically setTimeout from JS.
+think of `setTimeout` in Javascript
 
-```
+```go
 import "time"
 
 function timeMe() {
   // returns a channel that will be notified at that time (wait two seconds)
   timer1 := time.NewTimer(2 * time.Second)
-
   timer1.Stop() // cancel timer
-
   // sleep
   time.Sleep()
 }
@@ -363,7 +359,7 @@ function timeMe() {
 
 `ticker`
 
-Basically setInterval from JS
+think of `setInterval` in Javascript
 
 ```go
 package main
@@ -395,11 +391,13 @@ func main() {
 
 ```
 
-### Panic
+### Other
 
-Sort of like `throw` from JS but it will throw a non-zero exit code and provide a stack trace to stderr.
+`panic`
 
-```
+like `throw` in Javascript but it will throw a non-zero exit code and provide a stack trace to stderr.
+
+```go
 package main
 
 import "os"
@@ -411,19 +409,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 }
 ```
 
-### Defer
+`defer`
 
-Like a `finally` in JS. Except you defer a function call.
+Like a `finally` in Javascript. Except you defer a function call
 
-You have to check for errors even in a deferred function.
+You have to check for errors even in a deferred function
 
-For example, you `defer` the cleanup of a file.
+example: `defer` the cleanup of a file
 
-```
+```go
 func main() {
   f := createFile("/tmp/defer.txt")
   defer closeFile(f)
@@ -431,6 +428,6 @@ func main() {
 }
 ```
 
-### Exit
+`Exit`
 
-`os.Exit(3)` to exit with an explicit exit code. Return values from main don't count a la C.
+`os.Exit(3)` to exit with an explicit exit code. 
