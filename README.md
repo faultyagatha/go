@@ -342,6 +342,23 @@ go func(msg string) {
 }("GOING ASYNC ANON")
 ```
 
+`channels`: a way of communicating between coroutines;
+a typed conduit through which you can send and receive values with the channel operator, `<-`
+
+```go
+ch <- v    // Send v to channel ch.
+v := <-ch  // Receive from ch, and
+           // assign value to v.
+```
+
+created with `make()`
+
+```go
+intChannel := make(chan int)
+```
+
+`mutex`: mutual exclusion; a way to prevent interleavings and ensure that different coroutines won't write into the same variable at the same time; uses a `binary semaphore` (flags up and down)
+
 `timer`
 
 think of `setTimeout` in Javascript
@@ -392,22 +409,7 @@ func main() {
 
 ```
 
-`channels`: a typed conduit through which you can send and receive values with the channel operator, `<-`
-
-```go
-ch <- v    // Send v to channel ch.
-v := <-ch  // Receive from ch, and
-           // assign value to v.
-```
-
-created with `make()`
-
-```go
-intChannel := make(chan int)
-```
-
 ### Other
-
 
 
 `panic`
