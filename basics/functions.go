@@ -21,6 +21,15 @@ func doubleReturn(x int) (int, int) {
 	return x, x + 1
 }
 
+//closures
+func adder() func(int) int {
+	sum := 0
+	return func(x int) int {
+		sum += x
+		return sum
+	}
+}
+
 //GO PASSES ARGUMENTS BY VALUE
 //helps data incapsulation
 //but for large objects, it takes time to copy
@@ -92,6 +101,14 @@ func main() {
 
 	a, b := doubleReturn(3)
 	fmt.Println(a, b)
+
+	pos, neg := adder(), adder()
+	for i := 0; i < 10; i++ {
+		fmt.Println(
+			pos(i),
+			neg(-2*i),
+		)
+	}
 
 	x := 2
 	passByValue(x)

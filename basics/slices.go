@@ -90,10 +90,21 @@ func tictactoe() {
 	}
 }
 
+func sliceMethods() {
+	var arr [10]int
+	var sl []int
+	fmt.Println("slice: %d", sl)  //slice: %d []
+	fmt.Println("array: %d", arr) //array: %d [0 0 0 0 0 0 0 0 0 0]
+	sl2 := append(sl, 10)
+	fmt.Println("slice2: %d", sl2) //slice: %d []
+	fmt.Println("slice1: %d", sl)  //slice: %d []
+}
+
 func main() {
 	sliceExample()
 	sliceLiteral()
 	sliceMake()
 	namesSlice()
 	tictactoe()
+	sliceMethods()
 }

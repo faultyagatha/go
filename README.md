@@ -154,6 +154,10 @@ t = []string{"go", "is", "cool"}
 
 hash table
 
+keys are unsorted but we can print map using fmt package in key-sorted order to ease testing
+
+keys can be anything other than string 
+
 ```go
 m := map(map[string]int)
 ```
