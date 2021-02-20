@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"sync"
+	"time"
 )
 
 /*
@@ -12,57 +13,62 @@ import (
 - each philosopher is assiciated with a goroutine and two chopsticks
 */
 
-// //ChopStick represents a chopstick
-// type ChopStick struct {
-// 	sync.Mutex
-// }
+//ChopStick represents a chopstick
+type ChopStick struct {
+	sync.Mutex
+}
 
-// //Philosopher represents a philosopher
-// type Philosopher struct {
-// 	id                    int
-// 	leftChopS, rightChopS *ChopStick
-// }
+//Philosopher represents a philosopher
+type Philosopher struct {
+	id                    int
+	leftChopS, rightChopS *ChopStick
+}
 
-// func (p Philosopher) eat() {
-// 	for {
-// 		p.leftChopS.Lock()
-// 		p.rightChopS.Lock()
+var eatWgroup sync.WaitGroup
 
-// 		fmt.Println(p.id, "eating")
+func (p Philosopher) eat(count int) {
+	for i := 0; i < count; i++ {
+		p.leftChopS.Lock()
+		p.rightChopS.Lock()
+		//pauses help to decrease interleavings
+		time.Sleep(time.Second)
+		fmt.Println(p.id, "eating")
 
-// 		p.rightChopS.Unlock()
-// 		p.leftChopS.Unlock()
-// 	}
-// }
+		p.rightChopS.Unlock()
+		p.leftChopS.Unlock()
+		fmt.Println(p.id, "finished eating")
+		//pauses help to decrease interleavings
+		time.Sleep(time.Second)
+	}
+	eatWgroup.Done()
+}
 
-// func main() {
-// 	count := 5
+func main() {
+	count := 5
 
-// 	cSticks := make([]*ChopStick, count)
-// 	for i := 0; i < count; i++ {
-// 		cSticks[i] = new(ChopStick)
-// 	}
-// 	philos := make([]*Philosopher, count)
-// 	for i := 0; i < count; i++ {
-// 		//left chopstick = philosopher's index
-// 		//right chopstick = next after left
-// 		//this will cause: fatal error: all goroutines are asleep - deadlock!
-// 		//philos[i] = &Philosopher{i, cSticks[i], cSticks[(i+1)%count]}
+	cSticks := make([]*ChopStick, count)
+	for i := 0; i < count; i++ {
+		cSticks[i] = new(ChopStick)
+	}
+	philos := make([]*Philosopher, count)
+	for i := 0; i < count; i++ {
+		//left chopstick = philosopher's index
+		//right chopstick = next after left
+		//this will cause: fatal error: all goroutines are asleep - deadlock!
+		//philos[i] = &Philosopher{i, cSticks[i], cSticks[(i+1)%count]}
 
-// 		//each philosopher picks up lowest numbered chopstick first: (i-1+count)%count
-// 		philos[i] = &Philosopher{i, cSticks[i], cSticks[(i+1)%count]}
+		//each philosopher picks up lowest numbered chopstick first: (i-1+count)%count
+		philos[i] = &Philosopher{i, cSticks[i], cSticks[(i+1)%count]}
+		eatWgroup.Add(1)
+		go philos[i].eat(count)
+	}
+	// wait endlessly while they're dining
+	eatWgroup.Wait()
+	fmt.Println("Everybody finished eating")
+}
 
-// 		go philos[i].eat()
-// 	}
-// 	// for i := 0; i < count; i++ {
-// 	// 	go philos[i].eat()
-// 	// }
-// 	// wait endlessly while they're dining
-// 	endless := make(chan int)
-// 	<-endless
-// 	fmt.Println("Everybody finished eating")
-// }
-
+/*
+FUNCTIONS
 func philos(id int, left, right chan bool, wg *sync.WaitGroup) {
 	fmt.Printf("Philosopher # %d wants to eat\n", id)
 	<-left
@@ -88,3 +94,4 @@ func main() {
 	wg.Wait()
 	fmt.Println("Everybody finished eating")
 }
+*/
