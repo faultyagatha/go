@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"time"
+)
+
 /*********** Background:
 - One core runs 1 thing at a time, how to speed up?
 - von Neumann bottleneck: cpu instructions need wait for memory units that slows down the performance
@@ -71,3 +76,10 @@ GO RUNTIME SCHEDULER:
 //another goroutine can be created with go keyword
 //when there are other goroutines, main() is non-blocking
 //goroutine exits when it's complete
+
+func main() {
+	go fmt.Printf("New routine")
+	//this is bad cause we make assumptions about time (non-deterministic)
+	time.Sleep(100 * time.Millisecond) //hack to allow "New routine" to be printed
+	fmt.Printf("Main routine")         // without the hack above, prints only "Main routine"
+}
