@@ -10,6 +10,10 @@ unique project/package name
 
 the first statement in a go source file must be `package packagename`
 
+packages must always be in their own directory
+
+cmd / web / main
+
 _____________
 
 ## Generics

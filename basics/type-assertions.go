@@ -1,6 +1,8 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 //type assertion syntax: t := i.(T)
 //t, ok := i.(T)
@@ -88,4 +90,20 @@ func main() {
 	a := Person{"Arthur Dent", 42}
 	z := Person{"Zaphod Beeblebrox", 9001}
 	fmt.Println(a, z)
+
+	//reading from json
+	var p map[string]interface{}
+	// err = json.Unmarshal(data, &p)
+
+	//using type switch
+	for k, v := range p {
+		switch c := v.(type) {
+		case string:
+			fmt.Printf("Item %q is a string, containing %q\n", k, c)
+		case float64:
+			fmt.Printf("Looks like item %q is a number, specifically %f\n", k, c)
+		default:
+			fmt.Printf("Not sure what type item %q is, but I think it might be %T\n", k, c)
+		}
+	}
 }

@@ -53,6 +53,10 @@ func (d Dog) Speak() {
 	fmt.Println(d.name)
 }
 
+//use if we don't know what will be stored in the map
+//think of Json
+var p map[string]interface{}
+
 func main() {
 	var s1 Speaker
 	var d1 Dog = Dog{"Brian"}
