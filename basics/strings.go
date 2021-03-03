@@ -5,6 +5,7 @@ import (
 	"sort"
 	"strconv"
 	"strings"
+	"unicode"
 )
 
 //the string type in Go is an array/slice of bytes
@@ -44,6 +45,16 @@ func sortStringBySlice(s string) {
 	})
 
 	fmt.Println(string(runeSlice))
+}
+
+//check if the string has only letters
+func hasLetters(s string) bool {
+	for _, v := range s {
+		if unicode.IsLetter(v) {
+			return true
+		}
+	}
+	return false
 }
 
 func main() {
