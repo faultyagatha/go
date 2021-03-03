@@ -2,11 +2,57 @@ package main
 
 import (
 	"fmt"
+	"sort"
 	"strconv"
 	"strings"
 )
 
+//the string type in Go is an array/slice of bytes
+//(usually UTF-8 strings but may also be just binary data)
+
+//the name “rune” is another name for a Unicode code point
+//and is a 32 bit integer
+
+//Go strings are immutable and behave like read-only byte slices
+//(with a few extra properties).
+//To update the data, use a rune slice instead (see example in main).
+
+//******CASTING TO RUNES
+func stringToRuneSlice(s string) []rune {
+	var r []rune
+	for _, runeValue := range s {
+		r = append(r, runeValue)
+	}
+	return r
+}
+
+func sortStringByCharacter(s string) string {
+	r := stringToRuneSlice(s)
+	sort.Slice(r, func(i, j int) bool {
+		return r[i] < r[j]
+	})
+	return string(r)
+}
+
+//better option, as of 2020
+func sortStringBySlice(s string) {
+	s1 := "eidbaooo"
+	runeSlice := []rune(s1)
+	fmt.Println(string(runeSlice))
+	sort.Slice(runeSlice, func(i, j int) bool {
+		return runeSlice[i] < runeSlice[j]
+	})
+
+	fmt.Println(string(runeSlice))
+}
+
 func main() {
+	//***** IMMUTABLE
+	buf := []rune("hello")
+	buf[0] = 'H'
+	st := string(buf)
+	fmt.Println(st) // "Hello"
+
 	//***** MULTILINE
 	str1 := `This is a
 	multiline
