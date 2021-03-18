@@ -100,6 +100,13 @@ func sliceMethods() {
 	fmt.Println("slice1: %d", sl)  //slice: %d []
 }
 
+func reverse(s []int) []int {
+	for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+		s[i], s[j] = s[j], s[i]
+	}
+	return s
+}
+
 func main() {
 	sliceExample()
 	sliceLiteral()
@@ -107,4 +114,7 @@ func main() {
 	namesSlice()
 	tictactoe()
 	sliceMethods()
+	a := []int{1, 2, 3}
+	reverse(a)
+	fmt.Println(a)
 }

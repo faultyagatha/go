@@ -29,6 +29,15 @@ Under the hood, interface values can be thought of as a tuple of a value and a c
 
 `Concurrency` is build in.
 
+Strictly typed language with no implicit casting (unlike C++). Casting is always explicit. 
+
+```go
+i := 36
+j := 36.5
+sum := i + int(j) //explicitely converted to int
+```
+
+No method overloading (unlike C++)
 
 ## Functional programming
 
@@ -91,6 +100,24 @@ for _, item := range lst {
 	}
 ```
 in `switch`, the break is done implicitely by a compiler
+
+## OOP
+
+Go is not a classic OOP language. There is no type hierarchy.
+Go OOP Features:
+1. Structs: serve similar purpose to classes
+2. Methods: can operate on particular type and mock a member function 
+3. Embedding: we can embed anonymous types inside each other. 
+4. Interfaces: have no implementation. Objects that implement all the interface methods automatically implement the interface. There is no inheritance or subclassing or "implements" keyword.
+
+`Encapsulation`: 
+Go encapsulates things at the package level. Names that start with a lowercase letter are only visible within that package. You can hide anything in a private package and just expose specific types, interfaces, and factory functions.
+
+`Inheritance`: 
+composition by embedding an anonymous type is equivalent to implementation inheritance.
+
+`Polymorphism`:
+a variable of type interface can hold any value which implements the interface. This property of interfaces is used to achieve polymorphism in Go.
 
 
 ## Data types 
@@ -454,3 +481,76 @@ func main() {
 `Exit`
 
 `os.Exit(3)` to exit with an explicit exit code. 
+
+## Tips. Tricks, Interview Questions
+
+1. How to swap values:
+
+simple: a,b, = b,a
+
+```go
+func swap(a, b string) (string, string) {
+  return b, a
+}
+```
+
+2. Mind the difference:
+```go
+type Vertex struct {
+	X int
+	Y int
+}
+
+//returns a copy of a struct
+func funcOne() Vertex {
+  return Vertex{X: 1}
+}
+
+//returns a pointer to the struct
+func funcTwo() *Vertex {
+  return &Vertex{}
+}
+
+//overrides a value in a struct passed to a func
+func funcThree(v *Vertex) {
+  v.X = 1
+}
+```
+3. Concat strings:
+```go
+import (
+    "strings"
+    "fmt"
+)
+
+func main() {
+  var str strings.Builder
+  for i := 0; i < 10; i++ {
+    str.WriteString("hello")
+  }
+}
+```
+
+4. Check if map contains a key:
+```go
+if val, ok := dict["someval"]; ok {
+  //do something
+}
+```
+
+5. Copy map:
+```go
+mapOne := map[string]bool{"A": true, "B": true}
+mapTwo := make(map[string]bool)
+for i, v:= range mapOne {
+  mapTwo[i] = v
+}
+```
+
+6. Reverse a slice of ints:
+```go
+func reverse(s []int) {
+  for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+    s[i], s[j] = s[j], s[i]
+  }
+}
