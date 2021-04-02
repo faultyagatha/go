@@ -37,7 +37,18 @@ j := 36.5
 sum := i + int(j) //explicitely converted to int
 ```
 
-No method overloading (unlike C++)
+No method overloading (unlike C++).
+
+`Constants` can be untyped and typed.
+
+Any constant in golang, named or unnamed, is untyped unless given a type explicitly. For example an untyped floating-point constant like 4.5 can be used anywhere a floating-point value is allowed. Use untyped constants to temporarily escape from Go’s strong type system until their evaluation in a type-demanding expression.
+
+```go
+const untypedInt = 1
+
+const typedInt int = 1
+```
+
 
 ## Functional programming
 
@@ -439,6 +450,10 @@ func main() {
 }
 
 ```
+
+`Unbuffered channel`: the sender will block until the receiver receives the data from the channel; the receiver will also block until the sender sends the data into the channel
+
+`Buffered channel`: the sender will block when there is not empty slot of the channel; the receiver will block the channel when it is empty.
 
 ### Other
 
