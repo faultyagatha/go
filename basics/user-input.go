@@ -12,7 +12,7 @@ func main() {
 	fmt.Printf("Number of apples?")
 
 	fmt.Scan(&appleNum)
-	fmt.Printf("Apples number is: ", appleNum)
+	fmt.Println("Apples number is: ", appleNum)
 }
 
 /* Ex2: Write a program which prompts the user to enter a string.

@@ -28,6 +28,7 @@ func mapLiteral() {
 	fmt.Println(idMap)
 	delete(idMap, "joe")
 	fmt.Println(idMap)
+	fmt.Println(len(idMap)) //the built-in len() checks the num of keys in a map
 }
 
 func mapIter() {
@@ -63,12 +64,45 @@ func wordCount(s string) map[string]int {
 	return newMap
 }
 
+//create a set with map
+func makeSet() map[string]bool {
+	m := map[string]bool{
+		"cheese": true,
+		"wine":   true,
+		"salad":  true,
+	}
+	return m
+}
+
 func main() {
+	//this map is not initialised
+	//it has nil value
+	var nilMap map[string]bool
+	//this is an epmty map
+	emptyMap := map[string]bool{}
+	fmt.Println(nilMap, emptyMap)
+	fmt.Println(nilMap == nil) //true
+
+	//To clear a map, assign it to an empty map literal
+	toBeCleared := map[string]bool{
+		"Go is awesome":  true,
+		"Aikido is cool": true,
+	}
+	toBeCleared = map[string]bool{}
+	fmt.Println(len(toBeCleared)) //0
+
 	mapMake()
 	mapLiteral()
 	mapIter()
 	mutateMap()
 	wordCount("What a beautiful day")
+	set := makeSet()
+	if set["beer"] {
+		fmt.Println("true")
+	} else {
+		fmt.Println("false")
+	}
+	fmt.Println(set)
 	//how to use map with custom data type
 	m = make(map[string]Vertex)
 	m["Bell Labs"] = Vertex{

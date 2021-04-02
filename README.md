@@ -226,6 +226,29 @@ for key, val := range fruit {
 }
 ```
 
+to iterate over map keys in a certain order, first sort the keys as a slice and order them in the way you want:
+
+```go
+langs: = map[string]int {
+  "go": 10,
+  "c++": 9,
+  "python":8
+}
+
+var k []string
+for l := range langs {
+  k = append(k, l)
+}
+sort.Strings(k) //will be in alphab order
+
+for _, l := range langs {
+  fmt.Println(l, langs[k])
+}
+
+```
+
+to create a `Set`, use `map[string]bool` with true for vals in the map. 
+
 ### Strings
 
 ```go
