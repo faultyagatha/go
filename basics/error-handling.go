@@ -25,6 +25,8 @@ func readFile() {
 func Hello(name string) (string, error) {
 	// If no name was given, return an error with a message.
 	if name == "" {
+		//this is a common way to return double values
+		//with one being an error and another one is empty
 		return "", errors.New("empty name")
 	}
 

@@ -38,6 +38,22 @@ func mapIter() {
 	}
 }
 
+//how to return either val or bool when
+//accessing element in the map
+func multiValueMap() {
+	multiMap := map[string]int{"joe": 123, "jane": 456}
+	//compact syntax:
+	//if ok { } else { }
+	if val, ok := multiMap["joe"]; ok {
+		fmt.Println("value: ", val)
+	} else {
+		fmt.Println("key not found")
+	}
+	//to get only bool value:
+	_, found := multiMap["jave"]
+	fmt.Println("key is found", found)
+}
+
 func mutateMap() {
 	idMap := map[string]int{"joe": 123, "jane": 456}
 	idMap["joe"] = 789 //mulated "joe"

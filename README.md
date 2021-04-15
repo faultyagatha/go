@@ -360,6 +360,8 @@ This syntax creates a new struct.
 
 It's idiomatic to initiate a new struct with a factory function.
 
+[when to use a value receiver or a pointer receiver](https://github.com/golang/go/wiki/CodeReviewComments#receiver-type)
+
 ## Error handling
 
 Go communicates errors with explicit return values. Different than exceptions in other languages.
