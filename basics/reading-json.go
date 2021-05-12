@@ -8,6 +8,8 @@ import (
 	"strconv"
 )
 
+//with unstructured data, use interface{}
+
 // Users struct which contains
 // an array of users
 type Users struct {
@@ -44,6 +46,7 @@ func main() {
 
 	// read our opened xmlFile as a byte array.
 	byteValue, _ := ioutil.ReadAll(jsonFile)
+	fmt.Println("byteValue", byteValue)
 
 	// we initialize our Users array
 	var users Users

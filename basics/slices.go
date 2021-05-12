@@ -74,9 +74,9 @@ func namesSlice() {
 func tictactoe() {
 	// Create a tic-tac-toe board.
 	board := [][]string{
-		[]string{"_", "_", "_"},
-		[]string{"_", "_", "_"},
-		[]string{"_", "_", "_"},
+		{"_", "_", "_"},
+		{"_", "_", "_"},
+		{"_", "_", "_"},
 	}
 	// The players take turns.
 	board[0][0] = "X"
@@ -93,11 +93,11 @@ func tictactoe() {
 func sliceMethods() {
 	var arr [10]int
 	var sl []int
-	fmt.Println("slice: %d", sl)  //slice: %d []
-	fmt.Println("array: %d", arr) //array: %d [0 0 0 0 0 0 0 0 0 0]
+	fmt.Println("slice: %i", sl)  //slice: %d []
+	fmt.Println("array: %i", arr) //array: %d [0 0 0 0 0 0 0 0 0 0]
 	sl2 := append(sl, 10)
-	fmt.Println("slice2: %d", sl2) //slice: %d []
-	fmt.Println("slice1: %d", sl)  //slice: %d []
+	fmt.Println("slice2: %i", sl2) //slice: %d []
+	fmt.Println("slice1: %i", sl)  //slice: %d []
 }
 
 func reverse(s []int) []int {

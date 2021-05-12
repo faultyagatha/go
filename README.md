@@ -201,6 +201,9 @@ keys are unsorted but we can print map using fmt package in key-sorted order to 
 
 keys can be anything other than string 
 
+you can safely pass a map around by value, the underlying map will be updated, not a copy of the map. 
+pass-by-value in the case of a map means passing the address of the map, not the contents of the map
+
 ```go
 m := map(map[string]int)
 ```

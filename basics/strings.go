@@ -57,6 +57,13 @@ func hasLetters(s string) bool {
 	return false
 }
 
+//split string into a string of slices by separator
+func stringToSlice(s string) []string {
+	//split by comma
+	sl := strings.Split(s, ",")
+	return sl
+}
+
 func main() {
 	//***** IMMUTABLE
 	buf := []rune("hello")
