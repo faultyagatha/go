@@ -57,6 +57,32 @@ func (d Dog) Speak() {
 //think of Json
 var p map[string]interface{}
 
+// ----------
+// type assertions on empty interface
+//  two values can only be compared if one value
+// is of the same (or underlying) type with the other
+type T interface{}
+
+type hashMap struct {
+	m map[T]T
+	k []T
+}
+
+func (h *hashMap) Less(i, j int) bool {
+	switch v := h.m[h.k[i]].(type) {
+	case int:
+		return v > h.m[h.k[j]].(int)
+	case float32:
+		return v > h.m[h.k[j]].(float32)
+	case float64:
+		return v > h.m[h.k[j]].(float64)
+	case string:
+		return v > h.m[h.k[j]].(string)
+	default:
+		return false
+	}
+}
+
 func main() {
 	var s1 Speaker
 	var d1 Dog = Dog{"Brian"}

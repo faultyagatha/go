@@ -27,6 +27,61 @@ Polymorphism is achieved with `structs` that can have member functions (sort of)
 Uses `interfaces` (method signatures), same as Typescript. Unlike, Typescript, in Go a `type` implements an interface by implementing its methods. There is no explicit declaration of intent, no "implements" keyword.
 Under the hood, interface values can be thought of as a tuple of a value and a concrete type: `(value, type)`
 
+In Go, we can define as many little interfaces as we want. 
+`Duck typing` (structural typing)
+
+```go
+type NewUser struct {
+  Email    string
+  Password string
+}
+
+type DBUser struct {
+  ID           int
+  Email        string
+  PasswordHash string
+}
+
+//declare the interface inline
+func CreateUser(user *User, db interface {
+  SaveUser(*DBUser) error
+}) error {
+  var dbUser DBUser
+  // Validate the user first...
+  if user.Email == "" {
+    return fmt.Errorf("email is required")
+  }
+  dbUser.Email = strings.ToLower(user.Email)
+
+  if user.Passwword == "" {
+    return fmt.Errorf("password is required")
+  }
+  dbUser.Password = pretendBCrypt(user.Password)
+
+  // Then save the user with the db interface
+  return db.SaveUser(&dbUser)
+}
+
+func pretendBcrypt(pw string) string { return pw }
+
+type DataStore struct {}
+
+//use the SaveUser declared ob inline interface
+func (ds *DataStore) SaveUser(u *DBUser) error { 
+  return nil 
+}
+
+func (ds *DataStore) DeleteUser(id int) error {
+  return nil
+}
+
+func (ds *DataStore) CreateWidget(w *DBWidget) error {
+  return nil
+}
+
+// ... + more methods
+```
+
 `Concurrency` is build in.
 
 Strictly typed language with no implicit casting (unlike C++). Casting is always explicit. 
