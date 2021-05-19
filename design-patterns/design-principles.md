@@ -28,6 +28,8 @@ We should be able to add new features to the classes/modules without breaking ex
 
 We should strive not to introduce breaking changes to the existing functionality, because that would force us to refactor a lot of existing code and write a whole bunch of tests to make sure that the changes work.
 
+`Specification`: enterprise pattern
+
 3. `LSP` (Liskov Substitution Principle)
 
 Every child/derived class should be substitutable for their parent/base class without altering the correctness of the program. In other words, the objects of your subclass should behave in the same way as the objects of your superclass.

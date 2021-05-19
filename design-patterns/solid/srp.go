@@ -29,11 +29,12 @@ func (j *Journal) RemoveEntry(index int) {
 	// TODO
 }
 
-// *************
+//  ---------------
 // breaks SRP and turns into a God Object
 // in case other additional functionality is needed,
 // it's better to implement as helper functions
 // but not member functions (see below)
+//  ---------------
 
 func (j *Journal) Save(filename string) {
 	_ = ioutil.WriteFile(filename,
@@ -48,7 +49,7 @@ func (j *Journal) LoadFromWeb(url *url.URL) {
 
 }
 
-// *************
+//  ---------------
 // here starts a better solution that doesn't break SRP
 
 var lineSeparator = "\n"
