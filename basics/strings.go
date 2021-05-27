@@ -64,6 +64,18 @@ func stringToSlice(s string) []string {
 	return sl
 }
 
+func buildList(words []string) strings.Builder {
+	sb := strings.Builder{}
+	sb.WriteString("<ul>")
+	for _, v := range words {
+		sb.WriteString("<li>")
+		sb.WriteString(v)
+		sb.WriteString("</li>")
+	}
+	sb.WriteString("</ul>")
+	return sb
+}
+
 func main() {
 	//***** IMMUTABLE
 	buf := []rune("hello")
@@ -83,6 +95,8 @@ func main() {
 	str = str + "def"
 
 	// This is more efficient if you are combining lots of strings
+	// it writes the strings into a buffer
+	// and then returns a concatenated result
 	var sb strings.Builder
 	sb.WriteString("abc")
 	sb.WriteString("def")
@@ -108,4 +122,9 @@ func main() {
 	var s string
 	s = string(b) // convert the byte slice to a string
 	fmt.Println(s)
+
+	//***** STRINGS BUILDER
+	words := []string{"hello", "world"}
+	list := buildList(words)
+	fmt.Println("list: ", list.String()) //<ul><li>hello</li><li>world</li></ul>
 }
