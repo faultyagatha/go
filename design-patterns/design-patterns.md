@@ -18,7 +18,7 @@
 - the object is created in a single invocation that can be outsourced to:
     - a separate function (`Constructor`, `Factory Function`)
     - a separate factory struct
-- we can return struct or interface from a factory function
-s
+- we can return a struct or interface from a factory function
+- can be combined with prototype pattern
 4. `Prototype`:
 ...
