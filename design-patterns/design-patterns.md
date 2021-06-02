@@ -21,4 +21,7 @@
 - we can return a struct or interface from a factory function
 - can be combined with prototype pattern
 4. `Prototype`:
-...
+- complicated objects are not designed from scratch, they reiterate existing designs
+- an existing (partially constructed) design is a prototype
+- we make a copy of the prototype and customise it (requires `deep copy` support)
+- a prototype is a partially or fully initialised object that you copy (clone) and make use of it
