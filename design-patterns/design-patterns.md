@@ -20,8 +20,20 @@
     - a separate factory struct
 - we can return a struct or interface from a factory function
 - can be combined with prototype pattern
+
 4. `Prototype`:
 - complicated objects are not designed from scratch, they reiterate existing designs
 - an existing (partially constructed) design is a prototype
 - we make a copy of the prototype and customise it (requires `deep copy` support)
 - a prototype is a partially or fully initialised object that you copy (clone) and make use of it
+
+5. `Singleton`:
+- for some componentes it only makes sense to have one in the system:
+    - database repository
+    - object factory
+- in cases when the construction call is expensive
+    - we only do it once
+    - we give everyone the same instance
+- we need to prevent creation of additional copies
+- we want to have a lazy instantiation
+- often breaks the dependency inversion principle (in singleton, we often depend on the concrete implementation of singleton instead of abstraction)
