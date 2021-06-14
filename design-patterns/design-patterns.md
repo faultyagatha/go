@@ -37,3 +37,17 @@
 - we need to prevent creation of additional copies
 - we want to have a lazy instantiation
 - often breaks the dependency inversion principle (in singleton, we often depend on the concrete implementation of singleton instead of abstraction)
+
+6 `Adapter`:
+- a construct that adapts an existing interface X to conform the required interface Y
+- to implement the adapter:
+    - determine the API you have and the API you need
+    - create a component that aggregates (has a pointer to) the adaptee
+    - intermediate representations can pile up: use caching and other optimisations
+
+7. `Bridge`:
+- solves a 'Cartesian product' complexity exposion problem
+- decouples abstraction from implementation
+- both abstraction and implementation can exist as hierarchies
+- stronger form of incapsulation
+- can result in a cascading set of methods on a Bridge when many objects are introduced
