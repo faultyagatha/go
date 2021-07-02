@@ -13,7 +13,7 @@
 - functional builder allows easily to extend the builder and add more modifications to it
 
 3. `Factory`:
-- way of controlling how an object is constructed 
+- way of controlling how an object is constructed
 - used when the object creation logic gets too convoluted or when the struct has too many fields and needs to initialise all them correctly
 - the object is created in a single invocation that can be outsourced to:
     - a separate function (`Constructor`, `Factory Function`)
@@ -51,3 +51,8 @@
 - both abstraction and implementation can exist as hierarchies
 - stronger form of incapsulation
 - can result in a cascading set of methods on a Bridge when many objects are introduced
+
+8. `Composite`:
+- objects use other objects' fields/methods via embedding
+- composition allows for making compound objects
+- composite design is used to treat both single and composite objects uniformly
