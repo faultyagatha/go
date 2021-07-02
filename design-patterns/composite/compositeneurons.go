@@ -25,6 +25,7 @@ func (n *Neuron) ConnectTo(other *Neuron) {
 // NeuronLayer is a collection
 // neurons used to demonstrate
 // composite pattern
+// note the common Iterator method
 //  ---------------
 type NeuronLayer struct {
 	Neurons []Neuron
