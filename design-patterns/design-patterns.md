@@ -60,9 +60,10 @@
 ## Behavioral:
 1. `Iterator`:
 - iterator is a type that facilitates the traversal
-    - it keep a pointer to the current element
+    - it keeps a pointer to the current element
     - it knows how to move to a different element
 - solves the problem of accessing and traversing the elements of an aggregate object without exposing its representation (data structures)
 - with iterator, new traversal operations can be defined for an aggregate object without changing its interface
 - iterator pattern defines a separate (iterator) object that encapsulates accessing and traversing an aggregate object
-- in go, iteration can be achieved with `range` - in-built iterator for iterable objects
+- iterator moves along the iterated collection, indicating when last element has been reached
+- in go, there is no standard Iterable interface; iteration can be achieved with `range` - in-built iterator for iterable objects
