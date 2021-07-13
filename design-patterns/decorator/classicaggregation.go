@@ -28,7 +28,7 @@ func (l *Lizard) Crawl() {
 }
 
 // ---------------
-// Canonical way to extend two
+// Canonical way to extend
 // multiple structs in Go
 // but this can cause problems:
 // for example, methods with the
