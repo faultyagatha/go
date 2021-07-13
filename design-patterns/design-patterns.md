@@ -57,6 +57,12 @@
 - composition allows for making compound objects
 - composite design is used to treat both single and composite objects uniformly
 
+9. `Decorator`:
+- a pattern that facilitates the addition of behaviours to individual objects through embedding
+- solves the problem when we want to modify an object with additional functionality but do not want to rewrite or alter existing code (OCP) and keep new functionality separate (SRP)
+- interacts with existing structures
+
+
 ## Behavioral:
 1. `Iterator`:
 - iterator is a type that facilitates the traversal
