@@ -31,13 +31,13 @@ func readWriteOs() {
 	f, err := os.Create("test2.txt")
 	if err != nil {
 		fmt.Println(err)
-		return
+		os.Exit(1)
 	}
 	l, err := f.WriteString("Hello, World")
 	if err != nil {
 		fmt.Println(err)
 		f.Close()
-		return
+		os.Exit(1)
 	}
 	fmt.Println(l, "bytes written successfully")
 	err = f.Close()
