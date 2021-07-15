@@ -50,6 +50,32 @@ func (a *alphaReader) Read(b []byte) (int, error) {
 	return n, nil
 }
 
+type channelWriter struct {
+	ch chan byte
+}
+
+func newChannelWriter() *channelWriter {
+	return &channelWriter{make(chan byte, 1024)}
+}
+
+func (w *channelWriter) Write(b []byte) (int, error) {
+	n := 0
+	for _, v := range b {
+		w.ch <- v
+		n++
+	}
+	return n, nil
+}
+
+func (w *channelWriter) Channel() <-chan byte {
+	return w.ch
+}
+
+func (w *channelWriter) Close() error {
+	close(w.ch)
+	return nil
+}
+
 func main() {
 	reader := newAlphaReader("Hello! It's 9am, where is the sun?")
 	p := make([]byte, 4)
@@ -59,6 +85,17 @@ func main() {
 			break
 		}
 		fmt.Print(string(p[:n]))
+	}
+	fmt.Println()
+
+	writer := newChannelWriter()
+	go func() {
+		defer writer.Close()
+		writer.Write([]byte("Stream "))
+		writer.Write([]byte("me!"))
+	}()
+	for c := range writer.Channel() {
+		fmt.Printf("%c", c)
 	}
 	fmt.Println()
 }
