@@ -27,7 +27,7 @@ Polymorphism is achieved with `structs` that can have member functions (sort of)
 Uses `interfaces` (method signatures), same as Typescript. Unlike, Typescript, in Go a `type` implements an interface by implementing its methods. There is no explicit declaration of intent, no "implements" keyword.
 Under the hood, interface values can be thought of as a tuple of a value and a concrete type: `(value, type)`
 
-In Go, we can define as many little interfaces as we want. 
+In Go, we can define as many little interfaces as we want.
 `Duck typing` (structural typing)
 
 ```go
@@ -67,8 +67,8 @@ func pretendBcrypt(pw string) string { return pw }
 type DataStore struct {}
 
 //use the SaveUser declared ob inline interface
-func (ds *DataStore) SaveUser(u *DBUser) error { 
-  return nil 
+func (ds *DataStore) SaveUser(u *DBUser) error {
+  return nil
 }
 
 func (ds *DataStore) DeleteUser(id int) error {
@@ -84,7 +84,7 @@ func (ds *DataStore) CreateWidget(w *DBWidget) error {
 
 `Concurrency` is build in.
 
-Strictly typed language with no implicit casting (unlike C++). Casting is always explicit. 
+Strictly typed language with no implicit casting (unlike C++). Casting is always explicit.
 
 ```go
 i := 36
@@ -172,21 +172,21 @@ in `switch`, the break is done implicitely by a compiler
 Go is not a classic OOP language. There is no type hierarchy.
 Go OOP Features:
 1. Structs: serve similar purpose to classes
-2. Methods: can operate on particular type and mock a member function 
-3. Embedding: we can embed anonymous types inside each other. 
+2. Methods: can operate on particular type and mock a member function
+3. Embedding: we can embed anonymous types inside each other.
 4. Interfaces: have no implementation. Objects that implement all the interface methods automatically implement the interface. There is no inheritance or subclassing or "implements" keyword.
 
-`Encapsulation`: 
+`Encapsulation`:
 Go encapsulates things at the package level. Names that start with a lowercase letter are only visible within that package. You can hide anything in a private package and just expose specific types, interfaces, and factory functions.
 
-`Inheritance`: 
+`Inheritance`:
 composition by embedding an anonymous type is equivalent to implementation inheritance.
 
 `Polymorphism`:
 a variable of type interface can hold any value which implements the interface. This property of interfaces is used to achieve polymorphism in Go.
 
 
-## Data types 
+## Data types
 
 ### Arrays
 
@@ -254,9 +254,9 @@ hash table
 
 keys are unsorted but we can print map using fmt package in key-sorted order to ease testing
 
-keys can be anything other than string 
+keys can be anything other than string
 
-you can safely pass a map around by value, the underlying map will be updated, not a copy of the map. 
+you can safely pass a map around by value, the underlying map will be updated, not a copy of the map.
 pass-by-value in the case of a map means passing the address of the map, not the contents of the map
 
 ```go
@@ -305,7 +305,7 @@ for _, l := range langs {
 
 ```
 
-to create a `Set`, use `map[string]bool` with true for vals in the map. 
+to create a `Set`, use `map[string]bool` with true for vals in the map.
 
 ### Strings
 
@@ -353,7 +353,7 @@ func main() {
 
 like C structs
 
-methods can be associated with data assigned explicitely 
+methods can be associated with data assigned explicitely
 
 in this case, a hidden object (struct instance, for example) will be passed by value implicitely - use pointer to avoid value copying (see the code example).
 
@@ -578,7 +578,75 @@ func main() {
 
 `Exit`
 
-`os.Exit(3)` to exit with an explicit exit code. 
+`os.Exit(3)` to exit with an explicit exit code.
+
+## Print formatting
+
+bool:                    `%t`
+int, int8 etc.:          `%d`
+uint, uint8 etc.:        `%d`, %#x if printed with %#v
+float32, complex64, etc: `%g`
+string:                  `%s`
+chan:                    `%p`
+pointer:                 `%p`
+
+General:
+- `%v`	the value in a default format
+- `%+v` when printing structs, the plus flag adds field names
+- `%#v` a Go-syntax representation of the value
+- `%T`	a Go-syntax representation of the type of the value
+- `%%`	a literal percent sign; consumes no value
+
+Boolean
+- `%t`	the word true or false
+
+Integer
+- `%b`	base 2
+- `%c`	the character represented by the corresponding Unicode code point
+- `%d`	base 10
+- `%o`	base 8
+- `%O`	base 8 with 0o prefix
+- `%q`	a single-quoted character literal safely escaped with Go syntax.
+- `%x`	base 16, with lower-case letters for a-f
+- `%X`	base 16, with upper-case letters for A-F
+- `%U`	Unicode format: U+1234; same as "U+%04X"
+
+Floating-point and complex constituents:
+- `%b`	decimalless scientific notation with exponent a power of two
+- `%e`	scientific notation, e.g. -1.234456e+78
+- `%E`	scientific notation, e.g. -1.234456E+78
+- `%f`	decimal point but no exponent, e.g. 123.456
+- `%F`	synonym for `%f`
+- `%g`	%e for large exponents, %f otherwise. Precision is discussed below.
+- `%G`	%E for large exponents, %F otherwise
+- `%x`	hexadecimal notation (with decimal power of two exponent), e.g. -0x1.23abcp+20
+- `%X`	upper-case hexadecimal notation, e.g. -0X1.23ABCP+20
+
+String and slice of bytes:
+- `%s`	the uninterpreted bytes of the string or slice
+- `%q`	a double-quoted string safely escaped with Go syntax
+- `%x`	base 16, lower-case, two characters per byte
+- `%X`	base 16, upper-case, two characters per byte
+
+Slice:
+- `%p`  base 16 notation, with leading 0x
+
+Pointer:
+- `%p`	base 16 notation, with leading 0x
+- `%b, %d, %o, %x` and `%X` verbs also work with pointers, formatting the value exactly as if it were an integer.
+
+```go
+//simple default formatting
+//does not support formatting directives
+i := 5
+fmt.Println("Hello, playground", i)  // Hello, playground 5
+
+//using formatting directives
+fmt.Printf("Hello, playground %d\n", i) // Hello, playground 5
+
+//%v can figure out the type of the var
+fmt.Printf("Hello, playground %v\n", i) // Hello, playground 5
+```
 
 ## Tips. Tricks, Interview Questions
 
