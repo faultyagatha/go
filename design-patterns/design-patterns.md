@@ -61,6 +61,7 @@
 - a pattern that facilitates the addition of behaviours to individual objects through embedding
 - solves the problem when we want to modify an object with additional functionality but do not want to rewrite or alter existing code (OCP) and keep new functionality separate (SRP)
 - interacts with existing structures
+- often used to emulate multiple inheritance
 
 
 ## Behavioral:
@@ -73,3 +74,13 @@
 - iterator pattern defines a separate (iterator) object that encapsulates accessing and traversing an aggregate object
 - iterator moves along the iterated collection, indicating when last element has been reached
 - in go, there is no standard Iterable interface; iteration can be achieved with `range` - in-built iterator for iterable objects
+
+2. `Observer`:
+- solves the need to be informed when certain things happen
+    - object's field changes
+    - object does something
+    - some external event takes place
+- we want to listen to events and be notified when they take place
+- two participants: observable and observer
+- observer is an object that wishes to be informed about events happening in the system
+- observable is the entity generating the events
