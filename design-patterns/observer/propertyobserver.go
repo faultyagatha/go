@@ -40,6 +40,9 @@ type Observer interface {
 // communicate with struct's properties
 // access it's old value and new value.
 // The setter and getter are below
+// But we may have problems with
+// property dependencies
+// (see propertydependencies.go)
 //  ---------------
 type PropertyChange struct {
 	Name     string      //property string
