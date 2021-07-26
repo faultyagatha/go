@@ -84,3 +84,4 @@
 - two participants: observable and observer
 - observer is an object that wishes to be informed about events happening in the system
 - observable is the entity generating the events
+- common application in Go: send a notification when any property of a struct has changed
