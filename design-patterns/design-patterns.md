@@ -90,3 +90,7 @@
 - a pattern in which the object's behaviour is determined by its state
 - changes in state can be explicit or in response to event (see observer pattern)
 - an object transitions from one state to another (a trigger, action)
+- can define:
+    - state entry/exit behaviours
+    - action when a particular event causes transition
+    - guard conditions enabling/disabling a transition
