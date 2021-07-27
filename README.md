@@ -720,3 +720,45 @@ func reverse(s []int) {
     s[i], s[j] = s[j], s[i]
   }
 }
+```
+
+7. Print const (iotas):
+
+```go
+type State int
+
+//integers under the hood
+const (
+	OffHook State = iota
+	Connecting
+	Connected
+	OnHold
+	OnHook
+)
+
+// ---------------
+// String allows to handle
+// const ints as strings
+//  ---------------
+func (s State) String() string {
+	switch s {
+	case OffHook:
+		return "OffHook"
+	case Connecting:
+		return "Connecting"
+	case Connected:
+		return "Connected"
+	case OnHold:
+		return "OnHold"
+	case OnHook:
+		return "OnHook"
+	}
+	return "Unknown"
+}
+
+func main() {
+  var state State //do something with it
+  ...
+  fmt.Println("The state is currently", state)
+}
+```
