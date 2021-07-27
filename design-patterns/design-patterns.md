@@ -85,3 +85,8 @@
 - observer is an object that wishes to be informed about events happening in the system
 - observable is the entity generating the events
 - common application in Go: send a notification when any property of a struct has changed
+
+2. `State`:
+- a pattern in which the object's behaviour is determined by its state
+- changes in state can be explicit or in response to event (see observer pattern)
+- an object transitions from one state to another (a trigger, action)
