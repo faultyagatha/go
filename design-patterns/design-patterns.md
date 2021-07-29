@@ -1,9 +1,8 @@
 ## DESIGN PATTERNS
 
 ## Creational:
-1. `Singleton`:
 
-2. `Builder`:
+1. `Builder`:
 - some objects are simple and can be created in a single constructor call
 - other objects require more efforts to create
 - having a factory function with 10 arguments is not productive, because we force the user of the API to make many decisions at once
@@ -12,7 +11,7 @@
 - in some situation, we might need more than one builders (see builder/facets.go)
 - functional builder allows easily to extend the builder and add more modifications to it
 
-3. `Factory`:
+2. `Factory`:
 - way of controlling how an object is constructed
 - used when the object creation logic gets too convoluted or when the struct has too many fields and needs to initialise all them correctly
 - the object is created in a single invocation that can be outsourced to:
@@ -21,13 +20,13 @@
 - we can return a struct or interface from a factory function
 - can be combined with prototype pattern
 
-4. `Prototype`:
+3. `Prototype`:
 - complicated objects are not designed from scratch, they reiterate existing designs
 - an existing (partially constructed) design is a prototype
 - we make a copy of the prototype and customise it (requires `deep copy` support)
 - a prototype is a partially or fully initialised object that you copy (clone) and make use of it
 
-5. `Singleton`:
+4. `Singleton`:
 - for some componentes it only makes sense to have one in the system:
     - database repository
     - object factory
@@ -38,12 +37,16 @@
 - we want to have a lazy instantiation
 - often breaks the dependency inversion principle (in singleton, we often depend on the concrete implementation of singleton instead of abstraction)
 
-6 `Adapter`:
+5. `Adapter`:
 - a construct that adapts an existing interface X to conform the required interface Y
 - to implement the adapter:
     - determine the API you have and the API you need
     - create a component that aggregates (has a pointer to) the adaptee
     - intermediate representations can pile up: use caching and other optimisations
+
+6. `Facade`:
+- provides a simple and easy to understand API or user interface over a large and sophisticated body of code
+- we can expose these detailes if we want
 
 7. `Bridge`:
 - solves a 'Cartesian product' complexity exposion problem

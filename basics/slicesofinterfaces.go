@@ -35,6 +35,7 @@ func ReadAll2(readers ...io.Reader) (string, error) {
 // that could solve the problem.
 // Generics is not yet in Go
 //  ---------------
+/*
 func ReadAllGeneric[R io.Reader](readers []R) (string, error) {
   var sb strings.Builder
   for _, r := range readers {
@@ -46,6 +47,7 @@ func ReadAllGeneric[R io.Reader](readers []R) (string, error) {
   }
   return sb.String(), nil
 }
+*/
 
 func main() {
 
