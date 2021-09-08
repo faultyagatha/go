@@ -762,3 +762,28 @@ func main() {
   fmt.Println("The state is currently", state)
 }
 ```
+8. FIFO Queue: Push / Pop
+
+```go
+var queue = []int
+//push
+queue = append(queue, 1)
+queue = append(queue, 9)
+queue = append(queue, 19)
+//pop
+var first int
+first, queue = queue[0], queue[1:]
+```
+
+9. LIFO Stack: Push / Pop
+
+```go
+var stack = []int
+//push
+stack = append(stack, 1)
+stack = append(stack, 9)
+stack = append(stack, 19)
+//pop
+var last int
+last, stack = stack[len(stack) - 1], stack[:len(stack) - 1]
+```
