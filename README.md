@@ -205,9 +205,19 @@ theArray[2] = "Japan"  // Assign a value to the third element
 //using array literal syntax
 x := [5]int{10, 20, 30, 40, 50}   // Intialised with values
 var y [5]int = [5]int{10, 20, 30} // Partial assignment
-```
 
-mostly used with `slices` (Go's own data type) that are not contrained by length
+//technically, two distinct array types, despite being arrays of ints
+//because they hold different size
+arr1 int[2]
+arr2 int[3]
+```
+no negative indexing (unlike Python or JS):
+
+```go
+arr int[2]
+fmt.Println(arr[-1]) //invalid array index -1 (index must be non-negative)
+```
+mostly used as `slices` (Go's own data type) that are not contrained by length
 
 ### Slices
 
@@ -246,6 +256,31 @@ initialise values for a slice
 
 ```go
 t = []string{"go", "is", "cool"}
+```
+
+convert array to a slice
+
+```go
+arr := [3]string{"go", "is", "cool"}
+sl := arr[:]
+```
+
+combine two slices together
+
+```go
+sl1 := []string{"c", "is", "cool"}
+sl2 := []string{"go", "is", "cooler"}
+sl1 = append(sl1, sl2...) //note the spread operator
+```
+
+removing element(s) from a slice
+
+`slice = append(slice[:i], slice[i+1:]...)`
+
+```go
+sl := []string{"keep", "keep", "remove", "keep"}
+sl = append(sl[:2], sl[3:]...) //note the spread operator
+//to remove the range, use the same approach
 ```
 
 ### Maps
@@ -646,6 +681,10 @@ fmt.Printf("Hello, playground %d\n", i) // Hello, playground 5
 
 //%v can figure out the type of the var
 fmt.Printf("Hello, playground %v\n", i) // Hello, playground 5
+
+coral := [4]string{"blue coral", "staghorn coral", "pillar coral", "elkhorn coral"}
+//"%q\n" is the formatting directive, sets ""
+fmt.Printf("%q\n", coral) // ["blue coral" "staghorn coral" "pillar coral" "elkhorn coral"]
 ```
 
 ## Tips. Tricks, Interview Questions
