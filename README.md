@@ -136,6 +136,19 @@ func spread(nums ...int) int {
 }
 ```
 
+`named return values and naked return`
+
+return values can optionally be named. If named return values are used, a return statement without arguments will return those values. This is known as a 'naked' return.
+
+```go
+func SumAndMultiplyThenMinus(a, b, c int) (sum, mult int) {
+  sum, mult = a+b, a*b
+  sum -= c
+  mult -= c
+  return //named values are implicitly returned
+}
+```
+
 closures
 
 `anonymous functions`, like in Javascript.
