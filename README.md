@@ -25,10 +25,13 @@ Uninitialised values are implicitely initialised with `0`, `nil`, or `''` depend
 Polymorphism is achieved with `structs` that can have member functions (sort of). It's done externally, in the code (see examples).
 
 Uses `interfaces` (method signatures), same as Typescript. Unlike, Typescript, in Go a `type` implements an interface by implementing its methods. There is no explicit declaration of intent, no "implements" keyword.
-Under the hood, interface values can be thought of as a tuple of a value and a concrete type: `(value, type)`
+Under the hood, interface values can be thought of as a tuple of a value and a concrete type: `(value, type)`.
+An interface and a type are `structurally equivalent` if they both define a set of methods of the same name, and where methods from each share the same number of parameters and return values, of the same data type.
 
 In Go, we can define as many little interfaces as we want.
 `Duck typing` (structural typing)
+
+No need to define `implements` means that the interfaces defined in third-party packages can still be included in our own code base (they only need to match the methods).
 
 ```go
 type NewUser struct {
@@ -839,3 +842,7 @@ stack = append(stack, 19)
 var last int
 last, stack = stack[len(stack) - 1], stack[:len(stack) - 1]
 ```
+
+## Useful Links
+
+[interfaces](https://fast4ward.online/posts/a-guide-to-interfaces-in-go/)

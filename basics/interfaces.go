@@ -35,11 +35,13 @@ func (t Triangle) Perimeter() float64 {
 	return t.a + t.b + t.c
 }
 
-//In GO, interface has dynamic type and dynamic value
-//we can call the methods is inteface has dynamic type
-//but no dynamic value
-//BUT IF INTERFACE HAS NO DYNAMIC TYPE
-//WE CANNOT CALL INTERFACE'S METHODS (we don't know on what type to call it)
+// ---------------
+// In GO, interface has dynamic type and dynamic value
+// we can call the methods is inteface has dynamic type
+// but no dynamic value
+// BUT IF INTERFACE HAS NO DYNAMIC TYPE
+// WE CANNOT CALL INTERFACE'S METHODS (we don't know on what type to call it)
+// ---------------
 type Speaker interface {
 	Speak()
 }
@@ -48,19 +50,20 @@ type Dog struct {
 	name string
 }
 
-//Dog satisfies Speaker interface
+// Dog satisfies Speaker interface
 func (d Dog) Speak() {
 	fmt.Println(d.name)
 }
 
-//use if we don't know what will be stored in the map
-//think of Json
+// use if we don't know what will be stored in the map
+// think of Json
 var p map[string]interface{}
 
 // ----------
 // type assertions on empty interface
-//  two values can only be compared if one value
+// two values can only be compared if one value
 // is of the same (or underlying) type with the other
+// ---------------
 type T interface{}
 
 type hashMap struct {
@@ -83,6 +86,55 @@ func (h *hashMap) Less(i, j int) bool {
 	}
 }
 
+// ----------
+// example of how to use interfaces as arguments:
+// if Go can successfully determine the type,
+// it'll use a needed member function
+// ---------------
+func maybeLess(i interface{}, j, k int) {
+	// runtime check that may fail if the interface if of type hashMap
+	if hm, ok := i.(hashMap); ok {
+		hm.Less(j, k)
+	}
+
+	// compile time check: requires no additional allocation
+	// var _ hm = hashMap{}
+}
+
+// ---------------
+// In GO, interface can be empty
+// we can assign anything to a variable or parameter of this type
+// but we lose type safety.
+// EMPTY INTERFACE SHOULD BE AVOIDED
+// ---------------
+type empty interface{}
+
+// example of safely using empty interfaces
+type monster struct {
+	damage int
+}
+
+func (m *monster) attack() int {
+	return m.damage
+}
+
+type attacker interface {
+	attack() int
+}
+
+type defender interface {
+	defend() int
+}
+
+func attackOrDefend(attackerDefender interface{}) {
+	// Inside this function, we don't know what we're getting, but we can check!
+	if attacker, ok := attackerDefender.(attacker); ok {
+		fmt.Printf("Attacking with damage %d\n", attacker.attack())
+	} else if defender, ok := attackerDefender.(defender); ok {
+		fmt.Printf("Defending with damage %d\n", defender.defend())
+	}
+}
+
 func main() {
 	var s1 Speaker
 	var d1 Dog = Dog{"Brian"}
@@ -96,4 +148,8 @@ func main() {
 	s1 = d2
 	//we can do this
 	s1.Speak()
+
+	var a attacker = &monster{200}
+	attackOrDefend(a)       // Prints "Attacking with damage 200"
+	attackOrDefend("Hello") // This is allowed, but does nothing.
 }
