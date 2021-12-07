@@ -127,7 +127,7 @@ type defender interface {
 }
 
 func attackOrDefend(attackerDefender interface{}) {
-	// Inside this function, we don't know what we're getting, but we can check!
+	// Inside this function, we don't know what we're getting, but we can check
 	if attacker, ok := attackerDefender.(attacker); ok {
 		fmt.Printf("Attacking with damage %d\n", attacker.attack())
 	} else if defender, ok := attackerDefender.(defender); ok {
@@ -151,5 +151,5 @@ func main() {
 
 	var a attacker = &monster{200}
 	attackOrDefend(a)       // Prints "Attacking with damage 200"
-	attackOrDefend("Hello") // This is allowed, but does nothing.
+	attackOrDefend("Hello") // This is allowed, but does nothing. We can handle it with error.
 }
