@@ -12,6 +12,8 @@ the first statement in a go source file must be `package packagename`
 
 packages must always be in their own directory
 
+there can be only one main function in a package
+
 cmd / web / main
 
 _____________
