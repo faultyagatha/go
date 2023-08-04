@@ -1,22 +1,111 @@
 # GO
 
-## File organisation
+- [File Organisation](#file-organisation)
+- [Generics](#generics)
 
-root dir `go`
+## File Organisation
 
-`src` and `bin` inside the project
+- programs are organised into packages
+- unique project/package name
+- packages must always be in their own directory (cmd / web / main)
+- there can be only one main function in a package
 
-unique project/package name
+> A `package` is a collection of source files in the same directory that are compiled together. Functions, types, variables, and constants defined in one source file are visible to all other source files within the same package.
 
-the first statement in a go source file must be `package packagename`
+- a repository contains one or more modules
 
-packages must always be in their own directory
+> A `module` is a collection of related Go packages that are released together. A Go repository typically contains only one module, located at the root of the repository. A module can be defined locally without belonging to a repository. However, it's a good habit to organise your code as if you will publish it someday.
 
-there can be only one main function in a package
+- an import path is a string used to import a package
+- the first statement in a go source file must be `package packagename`
 
-cmd / web / main
+> A package's import path is its module path joined with its subdirectory within the module. For example, the module github.com/google/go-cmp contains a package in the directory cmp/. That package's import path is github.com/google/go-cmp/cmp. Packages in the standard library do not have a module path prefix.
 
-_____________
+- root dir `$HOME/go`
+- `src` and `bin` inside the project
+- executable binary are installed into `$HOME/go/bin/`
+
+> The install directory is controlled by the GOPATH and GOBIN environment variables. If GOBIN is set, binaries are installed to that directory. If GOPATH is set, binaries are installed to the `bin` subdirectory of the first directory in the GOPATH list. Otherwise, binaries are installed to the bin subdirectory of the default GOPATH (`$HOME/go` or `%USERPROFILE%\go`).
+
+> To set the go env to custom dir, use `$ go env -w GOBIN=/somewhere/else/bin`
+> To unset a variable previously set by go env -w, use go env -u: `$ go env -u GOBIN`
+
+### Documentation
+
+To install documentation, follow the steps:
+
+1. Add path variables to your ~/.bashrc or ~/.zshrc:
+
+```bash
+export GOPATH=$HOME/go # or somewhere else
+export GOROOT=/usr/local/opt/go/libexec
+export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOROOT/bin
+```
+
+2. Source your ~/.bashrc or ~/.zshrc:
+
+```bash
+source ~/.zshrc # or source ~/.bash_profile
+```
+
+3. Run
+
+```bash
+mkdir -p $GOPATH $GOPATH/src $GOPATH/pkg $GOPATH/bin # check beforehand if some of these folders are already installed
+go install golang.org/x/tools/cmd/godoc@latest
+godoc -http=localhost:6060
+```
+
+4. Open your browser at `localhost:6060`
+
+### Compile and Run Code
+
+Example: `helloworld.go`
+
+- compile: `go build helloworld.go`
+- run `./helloworld`
+
+or use a shortcut: `go run helloworld.go`
+
+> When opening a directory in VSCode that consists of multiple Go projects the following error appears: `gopls requires a module at the root of your workspace...` 
+
+From Go 1.18 onwards there is native support for multi-module workspaces. This is done by having a `go.work` file present in your parent directory.
+
+For a directory structure such as:
+
+```
+$ tree /my/parent/dir
+/my/parent/dir
+├── project-one
+│   ├── go.mod
+│   ├── project-one.go
+│   └── project-one_test.go
+└── project-two
+    ├── go.mod
+    ├── project-two.go
+    └── project-two_test.go
+```
+
+Create and populate the file by executing `go work`:
+
+```bash
+cd /my/parent/dir
+go work init
+go work use project-one
+go work use project-two
+```
+
+This will add a go.work file in your parent directory that contains a list of directories you marked for usage:
+
+```
+go 1.18
+
+use (
+    ./project-one
+    ./project-two
+)
+```
 
 ## Generics
 
@@ -87,6 +176,13 @@ func (ds *DataStore) CreateWidget(w *DBWidget) error {
 // ... + more methods
 ```
 
+`Postfix types`: types are given `after the variable name`
+
+```go
+var a int
+// instead of 'int a'
+```
+
 `Concurrency` is build in.
 
 Strictly typed language with no implicit casting (unlike C++). Casting is always explicit.
@@ -108,7 +204,6 @@ const untypedInt = 1
 
 const typedInt int = 1
 ```
-
 
 ## Functional programming
 
