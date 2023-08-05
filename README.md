@@ -1,7 +1,10 @@
 # GO
 
 - [File Organisation](#file-organisation)
-- [Generics](#generics)
+- [Variables, Primitive Types and Keywords](#variables-primitive-types-keywords)
+- [Control Structures](#control-structures)
+- [Functional Programming](#functional-programming)
+
 
 ## File Organisation
 
@@ -107,85 +110,46 @@ use (
 )
 ```
 
-## Generics
+## Variables, Primitive Types and Keywords
 
-Uninitialised values are implicitely initialised with `0`, `nil`, or `''` depending on data type.
+- uninitialised values are implicitly initialised with `0`, `nil`, or `''` depending on data type.
+- `Go is pass by value`:
+    - similarly to Javascript, primitive datatypes are copied
+    - for complex datatypes you pass a pointer to avoid memory oveload.
 
-`Go is pass by value`; similarly to Javascript, for complex datatypes you pass a pointer to avoid memory oveload.
-
-Polymorphism is achieved with `structs` that can have member functions (sort of). It's done externally, in the code (see examples).
-
-Uses `interfaces` (method signatures), same as Typescript. Unlike, Typescript, in Go a `type` implements an interface by implementing its methods. There is no explicit declaration of intent, no "implements" keyword.
-Under the hood, interface values can be thought of as a tuple of a value and a concrete type: `(value, type)`.
-An interface and a type are `structurally equivalent` if they both define a set of methods of the same name, and where methods from each share the same number of parameters and return values, of the same data type.
-
-In Go, we can define as many little interfaces as we want.
-`Duck typing` (structural typing)
-
-No need to define `implements` means that the interfaces defined in third-party packages can still be included in our own code base (they only need to match the methods).
-
-```go
-type NewUser struct {
-  Email    string
-  Password string
-}
-
-type DBUser struct {
-  ID           int
-  Email        string
-  PasswordHash string
-}
-
-//declare the interface inline
-func CreateUser(user *User, db interface {
-  SaveUser(*DBUser) error
-}) error {
-  var dbUser DBUser
-  // Validate the user first...
-  if user.Email == "" {
-    return fmt.Errorf("email is required")
-  }
-  dbUser.Email = strings.ToLower(user.Email)
-
-  if user.Passwword == "" {
-    return fmt.Errorf("password is required")
-  }
-  dbUser.Password = pretendBCrypt(user.Password)
-
-  // Then save the user with the db interface
-  return db.SaveUser(&dbUser)
-}
-
-func pretendBcrypt(pw string) string { return pw }
-
-type DataStore struct {}
-
-//use the SaveUser declared ob inline interface
-func (ds *DataStore) SaveUser(u *DBUser) error {
-  return nil
-}
-
-func (ds *DataStore) DeleteUser(id int) error {
-  return nil
-}
-
-func (ds *DataStore) CreateWidget(w *DBWidget) error {
-  return nil
-}
-
-// ... + more methods
-```
-
-`Postfix types`: types are given `after the variable name`
+- `postfix types`: types are given `after the variable name`
 
 ```go
 var a int
 // instead of 'int a'
 ```
+- can do `type inference` if a compact syntax is used (`only possible inside of a function`)
 
-`Concurrency` is build in.
+```go
+var a int                           
+var b bool                          
+a = 15
+b = false
 
-Strictly typed language with no implicit casting (unlike C++). Casting is always explicit.
+func funcScoped() {
+  a := 15      // type is deduced
+  b := false  // type is deduced
+}
+```
+
+- multiple variables of the same type can also be declared on a single line
+- parallel assignment is possible with compact syntax
+
+```go
+// multiple variables of the same type can also be declared on a single line
+var x, y int  
+
+func funcScoped() {
+  a, b := 20, 16 // a and b both integer variables and assigns 20 to a and 16 to b
+}
+```
+
+- strictly typed language with no implicit casting (unlike C++). Casting is always explicit --> assignment between items of different type `requires an explicit conversion`!!
 
 ```go
 i := 36
@@ -193,19 +157,92 @@ j := 36.5
 sum := i + int(j) //explicitely converted to int
 ```
 
-No method overloading (unlike C++).
+- `constants` can be untyped and typed
+- `created at compile time`, and can only be numbers, strings, or booleans
 
-`Constants` can be untyped and typed.
-
-Any constant in golang, named or unnamed, is untyped unless given a type explicitly. For example an untyped floating-point constant like 4.5 can be used anywhere a floating-point value is allowed. Use untyped constants to temporarily escape from Go’s strong type system until their evaluation in a type-demanding expression.
+> Any constant in golang, named or unnamed, is untyped unless given a type explicitly. For example an untyped floating-point constant like 4.5 can be used anywhere a floating-point value is allowed. Use untyped constants to temporarily escape from Go’s strong type system until their evaluation in a type-demanding expression.
 
 ```go
 const untypedInt = 1
-
 const typedInt int = 1
 ```
 
-## Functional programming
+### Primitive Data Types
+
+- `bool`
+- `int`:
+  int (will be based on the length of your machine: 32 or 64 bits), `int8`, `int16`, `int32`, `int64`, `uint8`, `uint16`, `uint32`, `uint64`, `byte` (alias for uint8)
+- float:
+  note: no float type, `float32` and `float64`
+- `string` (IMMUTABLE!!)
+
+> `Go strings are immutable and behave like read-only byte slices` with a few extra properties. 
+
+```go
+// Wrong
+var s string = "hello"
+s[0] = 'c' // compiler error
+
+// Right
+s := "hello"
+c := []rune(s)  // convert s to an array of runes
+c[0] = 'c'      // change the first element of this array
+s2 := string(c) // create a new string s2 with the alteration
+fmt.Printf("%s\n", s2) 
+```
+
+- `rune` (alias for int32) is an UTF-8 encoded code point
+
+> Useful example: iterating over characters in a string. You could loop over each byte (which is only equivalent to a character when strings are encoded in 8-bit ASCII, which they are not in Go!). But to get the actual characters you should use the rune type.
+
+- `complex numbers`:
+  - native support
+  - `complex128` (64 bit real and imaginary parts) or `complex64` (32 bit real and imaginary parts)
+
+### Go Keywords
+
+- import
+- package
+- var
+- type
+- struct
+- interface	
+- const	
+- func 
+- select
+- defer
+- chan
+- go
+- map	
+- case			
+- goto	
+- switch	
+- break		
+- continue
+- fallthrough
+- default	
+- return			
+- for
+- if	
+- else	
+
+## Control Structures
+
+same as usuall, some difference in the variations of `for` when used with `range`
+
+operators can be omitted with `_`
+
+`for range`: a mapper function for various data structures:
+two values are returned for each iteration: the first is the `index`, and the second is a `copy of the element at that index`
+
+```go
+for _, item := range lst {
+		fmt.Printf("%#v\n", item)
+	}
+```
+in `switch`, the break is done implicitely by a compiler
+
+## Functional Programming
 
 `first-class`; mostly like in Javascript (treated like other types)
 
@@ -264,23 +301,11 @@ func factory() func() int {
 }
 ```
 
-## Control-flow
-
-same as usuall, some difference in the variations of `for` when used with `range`
-
-operators can be omitted with `_`
-
-`for range`: a mapper function for various data structures:
-two values are returned for each iteration: the first is the `index`, and the second is a `copy of the element at that index`
-
-```go
-for _, item := range lst {
-		fmt.Printf("%#v\n", item)
-	}
-```
-in `switch`, the break is done implicitely by a compiler
+- `no function overloading` (like C, unlike C++)
 
 ## OOP
+
+- polymorphism is achieved with `structs` that can have member functions (sort of). It's done externally, in the code (see examples).
 
 Go is not a classic OOP language. There is no type hierarchy.
 Go OOP Features:
@@ -594,9 +619,78 @@ func main() {
 }
 ```
 
+## Interfaces
+
+- uses `interfaces` (method signatures), same as Typescript. 
+
+> Unlike Typescript, in Go, a `type` implements an interface by implementing its methods. There is no explicit declaration of intent, no "implements" keyword. Under the hood, interface values can be thought of as a tuple of a value and a concrete type: `(value, type)`.
+
+An interface and a type are `structurally equivalent` if they both define a set of methods of the same name, and where methods from each share the same number of parameters and return values, of the same data type.
+
+In Go, we can define as many little interfaces as we want.
+> `Duck typing` (structural typing): 'If it walks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck.'
+
+No need to define `implements` means that the interfaces defined in third-party packages can still be included in our own code base (they only need to match the methods).
+
+```go
+type NewUser struct {
+  Email    string
+  Password string
+}
+
+type DBUser struct {
+  ID           int
+  Email        string
+  PasswordHash string
+}
+
+//declare the interface inline
+func CreateUser(user *User, db interface {
+  SaveUser(*DBUser) error
+}) error {
+  var dbUser DBUser
+  // Validate the user first...
+  if user.Email == "" {
+    return fmt.Errorf("email is required")
+  }
+  dbUser.Email = strings.ToLower(user.Email)
+
+  if user.Passwword == "" {
+    return fmt.Errorf("password is required")
+  }
+  dbUser.Password = pretendBCrypt(user.Password)
+
+  // Then save the user with the db interface
+  return db.SaveUser(&dbUser)
+}
+
+func pretendBcrypt(pw string) string { return pw }
+
+type DataStore struct {}
+
+//use the SaveUser declared ob inline interface
+func (ds *DataStore) SaveUser(u *DBUser) error {
+  return nil
+}
+
+func (ds *DataStore) DeleteUser(id int) error {
+  return nil
+}
+
+func (ds *DataStore) CreateWidget(w *DBWidget) error {
+  return nil
+}
+
+// ... + more methods
+```
+
 ## Concurrency
 
-`Goroutine` is "a lightweight thread of execution"
+- `concurrency` is build in
+- `goroutine` is "a lightweight thread of execution"
+
+- goroutine has a simple model: 
+it is a function executing in parallel with other goroutines in the same address space. It is lightweight, costing little more than the allocation of stack space. And the stacks start small, so they are cheap, and grow by allocating (and freeing) heap storage as required.
 
 like a Javascript promise except actually concurrent (since JS is single-threaded)
 
