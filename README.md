@@ -3,6 +3,7 @@
 - [File Organisation](#file-organisation)
 - [Variables, Primitive Types and Keywords](#variables-primitive-types-keywords)
 - [Control Structures](#control-structures)
+- [Advanced Data Types](#advanced-data-types)
 - [Functional Programming](#functional-programming)
 
 
@@ -228,140 +229,129 @@ fmt.Printf("%s\n", s2)
 
 ## Control Structures
 
-same as usuall, some difference in the variations of `for` when used with `range`
-
-operators can be omitted with `_`
-
-`for range`: a mapper function for various data structures:
-two values are returned for each iteration: the first is the `index`, and the second is a `copy of the element at that index`
+- classic, some difference in the variations of `for` when used with `range`
+- operators can be omitted with `_`
+- `for range`: a mapper function for various data structures:
+    - two values are returned for each iteration: 
+    - the first is the `index`, and the second is a `copy of the element at that index`
 
 ```go
 for _, item := range lst {
-		fmt.Printf("%#v\n", item)
-	}
-```
-in `switch`, the break is done implicitely by a compiler
+  // item is the copy of the element
+  // in the list
+	fmt.Printf("%#v\n", item)
+}
 
-## Functional Programming
+// can also use range on strings directly: 
+// --> it will break out the individual Unicode characters
+// into runes (UTF-8 characters that may be up to 32 bits)
+for pos, char := range "Go!" {
+  fmt.Printf("character '%c' starts at byte position %d\n", char, pos)
+}
 
-`first-class`; mostly like in Javascript (treated like other types)
-
-`multiple return values` (think Typescript or Python tuples)
-
-```go
-func doubleReturn(x int) (int, int) {
-	return x, x + 1
+// working with list of strings
+list := []string{"a", "b", "c", "d", "e", "f"}
+for k, v := range list {
+  // do something with k and v
 }
 ```
-return values can be omitted with `_`:
+- in `switch`, the break is done implicitely by a compiler
+- `fallthrough` is possible
 
 ```go
-var sum, _ = doubleReturn(5)
-```
+switch i {
+  case 0:  fallthrough
+  case 1: 1
+    f()
+  default:
+     g() 2
+}
 
-variadic functions (`nums ...int`):
-
-think `...rest` operator in Javascript
-
-```go
-func spread(nums ...int) int {
-  total := 0
-  for _, num := range nums {
-    total += num
-  }
-  return total
+// or another mode of the same statement:
+switch i {
+  // instead of fallthrough, 2 cases:
+  case 0, 1: 1
+    f()
+  default:
+    g()
 }
 ```
-
-`named return values and naked return`
-
-return values can optionally be named. If named return values are used, a return statement without arguments will return those values. This is known as a 'naked' return.
+- since if and switch accept an initialization statement, it’s common to see one used to set up a (local) variable:
 
 ```go
-func SumAndMultiplyThenMinus(a, b, c int) (sum, mult int) {
-  sum, mult = a+b, a*b
-  sum -= c
-  mult -= c
-  return //named values are implicitly returned
+if err := SomeFunction(); err == nil {
+  // do something if no error occurred
+} else {
+	return err
 }
 ```
-
-closures
-
-`anonymous functions`, like in Javascript.
+- idiomatic to return err immediately if it's occurred:
 
 ```go
-func factory() func() int {
-  i := 0
-
-  return func() int {
-    i++
-    return i
-  }
+if err := SomeFunction(); err != nil {
+  return err
 }
+// do something if no error occurred
 ```
 
-- `no function overloading` (like C, unlike C++)
+- `for` loop:
+  - `for init; condition; post { }` - traditional loop;
+  - `for condition { }` - a while loop;
+  - `for { }` - an endless loop
 
-## OOP
-
-- polymorphism is achieved with `structs` that can have member functions (sort of). It's done externally, in the code (see examples).
-
-Go is not a classic OOP language. There is no type hierarchy.
-Go OOP Features:
-1. Structs: serve similar purpose to classes
-2. Methods: can operate on particular type and mock a member function
-3. Embedding: we can embed anonymous types inside each other.
-4. Interfaces: have no implementation. Objects that implement all the interface methods automatically implement the interface. There is no inheritance or subclassing or "implements" keyword.
-
-`Encapsulation`:
-Go encapsulates things at the package level. Names that start with a lowercase letter are only visible within that package. You can hide anything in a private package and just expose specific types, interfaces, and factory functions.
-
-`Inheritance`:
-composition by embedding an anonymous type is equivalent to implementation inheritance.
-
-`Polymorphism`:
-a variable of type interface can hold any value which implements the interface. This property of interfaces is used to achieve polymorphism in Go.
-
-
-## Data types
+## Advanced Data Types
 
 ### Arrays
 
-same as in C++: fixed length, must be known on compilation time
-
-but uninit values are by default initialised to `0`, `nil`, or `''`
-
-initialisation:
+- same as in C++: fixed length, must be known on compilation time
+- but uninit values are by default initialised to `0`, `nil`, or `''`
+- `assigning one array to another copies all the elements`.
+- if you `pass an array to a function` it will receive `a copy of the array`, not a pointer to it.
 
 ```go
+// initialisation
 var theArray [3]string
 theArray[0] = "India"  // Assign a value to the first element
 theArray[1] = "Canada" // Assign a value to the second element
 theArray[2] = "Japan"  // Assign a value to the third element
 
-//using array literal syntax
+// using array literal syntax
 x := [5]int{10, 20, 30, 40, 50}   // Intialised with values
 var y [5]int = [5]int{10, 20, 30} // Partial assignment
 
-//technically, two distinct array types, despite being arrays of ints
-//because they hold different size
+z := [...]int{100, 200, 300}   // Intialised with values, size is determined
+// on compilation by counting the elements
+
+// technically, two distinct array types, despite being arrays of ints
+// because they hold different size
 arr1 int[2]
 arr2 int[3]
 ```
-no negative indexing (unlike Python or JS):
+- no negative indexing (unlike Python or JS):
 
 ```go
 arr int[2]
 fmt.Println(arr[-1]) //invalid array index -1 (index must be non-negative)
 ```
-mostly used as `slices` (Go's own data type) that are not contrained by length
+> When declaring arrays you always have to type something in between the square brackets, either a number or three dots (...), when using a composite literal. 
+
+> When using multidimensional arrays, you can use the following syntax: `a := [2][2]int{ {1,2}, {3,4} }`.
+
+- arrays are used on a few occasions (they cannot be resized, not dynamic, their size must be known on compilation time) 
+- mostly used as `slices` (Go's own data type) that are not contrained by length (think vector in C++)
 
 ### Slices
 
-like `dynamically-sized arrays` (think Vector in C++)
+- like `dynamically-sized arrays` (think Vector in C++)
+- a slice is a `pointer to an array`
+- slices are `reference types` -->
+    - changing the elements of a slice modifies the corresponding elements of its underlying array
+    - assign one slice to another, both refer to the same underlying array
+    - `slicing does not copy the slice’s data`. It creates a new slice value that points to the original array. This makes slice operations as efficient as manipulating array indices
+    - a slice cannot be grown beyond its capacity. Attempting to do so will cause a runtime panic, just as when indexing outside the bounds of a slice or array
+    - slices cannot be re-sliced below zero to access earlier elements in the array.
 
-there is a catch with storing data (see code examples)
+#### Member Functions
 
 every slice has 3 properties:
 
@@ -369,41 +359,64 @@ every slice has 3 properties:
 - `length`: the number of elements in the slice: len()
 - `capacity`: maximum number of elements: cap()
 
-create an empty slice with non-zero length, use `make`
+[visual explanation](https://go.dev/blog/slices-intro)
 
-make a slice of empty strings with length 3
+#### Creating Slices
+
+- slices can be created explicitly or via `make()` API:
 
 ```go
+// create slice explicitly from an array:
+var arr[] int = []int{1,2,3}
+sl := arr[:3]
+// make a slice of empty strings with length 3
 s := make([]string, 3)
 ```
 
-`append` returns a new slice with 1 or more values; immutable, in contrast to Javascript
+#### Growing Slices
+
+> To increase the capacity of a slice one must create a new, larger slice and copy the contents of the original slice into it. This technique is how dynamic array implementations from other languages work behind the scenes.
+
+- to modify the length of the slice, use `append` and `copy`:
+  - `append` returns a new slice with 1 or more values; immutable, in contrast to Javascript
+  - the append function appends zero or more values to a slice and returns the result: a slice with the same type as the original. If the original slice isn’t big enough to fit the added values, append will allocate a new slice that is big enough.
+  - `copy` copies slice elements from a source to a destination, and returns the number of elements it copied. This number is the minimum of the length of the source and the length of the destination.
 
 ```go
-s = append(s, "d")
-s = append(s, "e")
+// append
+s0 := []int{0, 0}
+s1 := append(s0, 2) // s1 equal to []int{0, 0, 2}
+s2 := append(s1, 3, 5, 7) // s2 equal to []int{0, 0, 2, 3, 5, 7}
+// make it clear explicit that you’re appending another slice, instead of a single value
+s3 := append(s2, s0...) // s3 equal to []int{0, 0, 2, 3, 5, 7, 0, 0}.
+
+// copy
+var a = []int{0, 1, 2, 3, 4, 5, 6, 7}
+var s = make([]int, 6)
+n1 := copy(s, a[0:]) // []int{0, 1, 2, 3, 4, 5}
+n2 := copy(s, s[2:]) // []int{2, 3, 4, 5, 4, 5}
 ```
 
-`slice` operator similar to Python
+- slice `[start:end]` operator similar to Python
 
 ```go
 s[1:3]
 ```
 
-initialise values for a slice
+- initialise values for a slice
 
 ```go
 t = []string{"go", "is", "cool"}
 ```
 
-convert array to a slice
+- convert array to a slice
 
 ```go
 arr := [3]string{"go", "is", "cool"}
 sl := arr[:]
 ```
 
-combine two slices together
+- combine two slices together
 
 ```go
 sl1 := []string{"c", "is", "cool"}
@@ -411,7 +424,7 @@ sl2 := []string{"go", "is", "cooler"}
 sl1 = append(sl1, sl2...) //note the spread operator
 ```
 
-removing element(s) from a slice
+- removing element(s) from a slice
 
 `slice = append(slice[:i], slice[i+1:]...)`
 
@@ -592,6 +605,87 @@ This syntax creates a new struct.
 It's idiomatic to initiate a new struct with a factory function.
 
 [when to use a value receiver or a pointer receiver](https://github.com/golang/go/wiki/CodeReviewComments#receiver-type)
+
+## Functional Programming
+
+`first-class`; mostly like in Javascript (treated like other types)
+
+`multiple return values` (think Typescript or Python tuples)
+
+```go
+func doubleReturn(x int) (int, int) {
+	return x, x + 1
+}
+```
+return values can be omitted with `_`:
+
+```go
+var sum, _ = doubleReturn(5)
+```
+
+variadic functions (`nums ...int`):
+
+think `...rest` operator in Javascript
+
+```go
+func spread(nums ...int) int {
+  total := 0
+  for _, num := range nums {
+    total += num
+  }
+  return total
+}
+```
+
+`named return values and naked return`
+
+return values can optionally be named. If named return values are used, a return statement without arguments will return those values. This is known as a 'naked' return.
+
+```go
+func SumAndMultiplyThenMinus(a, b, c int) (sum, mult int) {
+  sum, mult = a+b, a*b
+  sum -= c
+  mult -= c
+  return //named values are implicitly returned
+}
+```
+
+closures
+
+`anonymous functions`, like in Javascript.
+
+```go
+func factory() func() int {
+  i := 0
+
+  return func() int {
+    i++
+    return i
+  }
+}
+```
+
+- `no function overloading` (like C, unlike C++)
+
+## OOP
+
+- polymorphism is achieved with `structs` that can have member functions (sort of). It's done externally, in the code (see examples).
+
+Go is not a classic OOP language. There is no type hierarchy.
+Go OOP Features:
+1. Structs: serve similar purpose to classes
+2. Methods: can operate on particular type and mock a member function
+3. Embedding: we can embed anonymous types inside each other.
+4. Interfaces: have no implementation. Objects that implement all the interface methods automatically implement the interface. There is no inheritance or subclassing or "implements" keyword.
+
+`Encapsulation`:
+Go encapsulates things at the package level. Names that start with a lowercase letter are only visible within that package. You can hide anything in a private package and just expose specific types, interfaces, and factory functions.
+
+`Inheritance`:
+composition by embedding an anonymous type is equivalent to implementation inheritance.
+
+`Polymorphism`:
+a variable of type interface can hold any value which implements the interface. This property of interfaces is used to achieve polymorphism in Go.
 
 ## Error handling
 

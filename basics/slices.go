@@ -39,8 +39,8 @@ func sliceLiteral() {
 	fmt.Println("sli cap: ", cap(sli))
 }
 
-//creates a slice with init vals of 0
-//helps to create dynamically-sized arrays
+// creates a slice with init vals of 0
+// helps to create dynamically-sized arrays
 func sliceMake() {
 	sli := make([]int, 10) //init to 0 ith length 10
 	fmt.Println("sli: ", sli)
@@ -49,8 +49,8 @@ func sliceMake() {
 	fmt.Println("sli2 cap: ", cap(sli2))
 }
 
-//appends to a slice - can excede the size of an array - the memory will
-//be reallicated as in C++ vectors
+// appends to a slice - can excede the size of an array - the memory will
+// be reallocated as in C++ vectors
 func sliceAppend() {
 	sli := make([]int, 0, 3)
 	sli = append(sli, 100)
@@ -107,6 +107,46 @@ func reverse(s []int) []int {
 	return s
 }
 
+func copyByteSlice1(source []byte) []byte {
+	dest := make([]byte, len(source), (cap(source)+1)*2) // +1 in case cap(s) == 0
+	// manual copying
+	for i := range source {
+		dest[i] = source[i]
+	}
+	source = dest
+	return dest
+}
+
+func copyByteSlice2(source []byte) []byte {
+	dest := make([]byte, len(source), (cap(source)+1)*2) // +1 in case cap(s) == 0
+	// copying using in-built func
+	copy(dest, source)
+	source = dest
+	return dest
+}
+
+func appendByte1(slice []byte, data ...byte) []byte {
+	// manual append
+	m := len(slice)
+	n := m + len(data)
+	if n > cap(slice) { // if necessary, reallocate
+			// allocate double what's needed, for future growth.
+			newSlice := make([]byte, (n+1)*2)
+			copy(newSlice, slice)
+			slice = newSlice
+	}
+	slice = slice[0:n]
+	copy(slice[m:n], data)
+	return slice
+}
+
+func appendByte2(slice []byte, data ...byte) []byte {
+	// using in-built append
+	
+	slice = append(slice, data...)
+	return slice
+}
+
 func main() {
 	sliceExample()
 	sliceLiteral()
@@ -117,4 +157,22 @@ func main() {
 	a := []int{1, 2, 3}
 	reverse(a)
 	fmt.Println(a)
+
+	var arr[] int = []int{1,2,3}
+	sl := arr[:3]
+	fmt.Printf("%d\n", sl)
+
+	var arr2 = []int{0, 1, 2, 3, 4, 5, 6, 7}
+	var s = make([]int, 6)
+	n1 := copy(s, arr2[0:]) 
+	fmt.Printf("n1: %d\n", n1)
+	n2 := copy(s, s[2:])
+	fmt.Printf("n2: %d\n", n2)
+
+	p := []byte{2, 3, 5}
+	p = appendByte1(p, 7, 11, 13)
+	// p = appendByte2(p, 7, 11, 13)
+	fmt.Printf("p: %d\n", p) // [2 3 5 7 11 13]
+
+
 }

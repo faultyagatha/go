@@ -18,9 +18,19 @@ import (
 //(with a few extra properties).
 //To update the data, use a rune slice instead (see example in main).
 
-//******CASTING TO RUNES
+//****** CASTING TO RUNES
 func stringToRuneSlice(s string) []rune {
 	var r []rune
+	/* You can use range on strings directly:
+		it will break out the individual Unicode characters 
+		and their start position, by parsing the UTF-8. 
+		[In the UTF-8 world characters are called runes. 
+		Mostly, when people talk about characters, 
+		they mean 8 bit characters. 
+		As UTF-8 characters may be up to 32 bits the word rune is used. 
+		In this case the type of char is rune.]
+	*/
+	// here the pos is omitted
 	for _, runeValue := range s {
 		r = append(r, runeValue)
 	}
