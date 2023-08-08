@@ -4,7 +4,8 @@
 - [Variables, Primitive Types and Keywords](#variables-primitive-types-keywords)
 - [Control Structures](#control-structures)
 - [Advanced Data Types](#advanced-data-types)
-- [Functional Programming](#functional-programming)
+- [Functions](#functions)
+- [Packages](#packages)
 
 
 ## File Organisation
@@ -436,32 +437,50 @@ sl = append(sl[:2], sl[3:]...) //note the spread operator
 
 ### Maps
 
-hash table
+- hash table or in its simplest form, an array indexed by strings
+- keys are unsorted but we can print map using `fmt package` in key-sorted order to ease testing
+- keys can be anything other than string
+- map is a reference typ
+- you can safely pass a map around by value, the underlying map will be updated, not a copy of the map
+- `pass-by-value` for a map is a special case: means passing the address of the map, not the contents of the map
 
-keys are unsorted but we can print map using fmt package in key-sorted order to ease testing
-
-keys can be anything other than string
-
-you can safely pass a map around by value, the underlying map will be updated, not a copy of the map.
-pass-by-value in the case of a map means passing the address of the map, not the contents of the map
-
-```go
-m := map(map[string]int)
-```
-
-delete values with `delete`
+#### Create a Map
+- define a map: `map[<from type>]<to type>`
+- use `make()` when only declaring a map
 
 ```go
-delete(m, "mykey")
+monthdays := map[string]int {
+  "Jan": 31, "Feb": 28, "Mar": 31,
+  "Apr": 30, "May": 31, "Jun": 30,
+  "Jul": 31, "Aug": 31, "Sep": 30,
+  "Oct": 31, "Nov": 30, "Dec": 31, 1
+}
+
+// or using make (in this case, the map is empty)
+monthdays := make(map[string]int)
 ```
 
-optional second return value indicates whether the key was present in the object
+#### Changing Map
 
 ```go
-value, didKeyExist = m["mykey]
+// add a new element to the map monthdays
+monthdays["Undecim"] = 30
+
+//  if you use a key that already exists, the value will be silently overwritten
+monthdays["Feb"] = 29
+
+// check if the value is present
+value, ok := monthdays["Jan"] 
+```
+- optional second return value indicates whether the key was present in the object
+- idiomatic for Go: `“comma ok” form.` when checking values in the maps
+- delete values with `delete`
+
+```go
+delete(monthdays, "Undecim")
 ```
 
-loop through with `for range` (think of `for in` in Javascript)
+- loop through with `for range` (think of `for in` in Javascript)
 
 ```go
 fruit := map[string]string{"a": "apple", "b": "banana"}
@@ -470,7 +489,7 @@ for key, val := range fruit {
 }
 ```
 
-to iterate over map keys in a certain order, first sort the keys as a slice and order them in the way you want:
+- to iterate over map keys in a certain order, first sort the keys as a slice and order them in the way you want:
 
 ```go
 langs: = map[string]int {
@@ -491,7 +510,7 @@ for _, l := range langs {
 
 ```
 
-to create a `Set`, use `map[string]bool` with true for vals in the map.
+- to create a `Set`, use `map[string]bool` with true for vals in the map.
 
 ### Strings
 
@@ -606,53 +625,58 @@ It's idiomatic to initiate a new struct with a factory function.
 
 [when to use a value receiver or a pointer receiver](https://github.com/golang/go/wiki/CodeReviewComments#receiver-type)
 
-## Functional Programming
+## Functions
 
-`first-class`; mostly like in Javascript (treated like other types)
+- `pass-by-value`
+- `multiple return values` (think Typescript or Python tuples):
+  - useful to return a value and error
+  - removes the need for in-band error returns (such as -1 for EOF) and modifying an argument
+  - if you want the return parameters not to be named you only give the types: (int, int)
+  - `named return values and naked return`
 
-`multiple return values` (think Typescript or Python tuples)
-
-```go
-func doubleReturn(x int) (int, int) {
-	return x, x + 1
-}
-```
-return values can be omitted with `_`:
+>  The `return` or result parameters of a Go function can be given names and used as regular variables, just like the incoming parameters. When named, they are initialised to the zero values for their types when the function begins. If the function executes a return statement with no arguments, the current values of the result parameters are returned. Using these features enables you to do more with less code.
 
 ```go
-var sum, _ = doubleReturn(5)
-```
-
-variadic functions (`nums ...int`):
-
-think `...rest` operator in Javascript
-
-```go
-func spread(nums ...int) int {
-  total := 0
-  for _, num := range nums {
-    total += num
-  }
-  return total
-}
-```
-
-`named return values and naked return`
-
-return values can optionally be named. If named return values are used, a return statement without arguments will return those values. This is known as a 'naked' return.
-
-```go
+// named return
 func SumAndMultiplyThenMinus(a, b, c int) (sum, mult int) {
   sum, mult = a+b, a*b
   sum -= c
   mult -= c
   return //named values are implicitly returned
 }
+
+// naked return
+func doubleReturn(x int) (int, int) {
+	return x, x + 1
+}
+```
+- return values can be omitted with `_`:
+
+```go
+var sum, _ = doubleReturn(5)
 ```
 
-closures
+- functions can be declared in any order: the compiler scans the entire file before execution, so no need for function declaration
+- Go `does not allow nested functions`, but you can work around this with `anonymous functions`.
 
-`anonymous functions`, like in Javascript.
+- `first-class`; mostly like in Javascript (treated like other types) -->
+- can be assigned to variables:
+
+```go
+// a stores a pointer to the anonymous function
+a := func() { 1
+	fmt.Println("Hello")
+}
+```
+- can be used as `callbacks`:
+
+```go
+func callback(y int, f func(int)) {
+  f(y)
+}
+```
+
+- can be used as `closures`, like in Javascript:
 
 ```go
 func factory() func() int {
@@ -664,8 +688,115 @@ func factory() func() int {
   }
 }
 ```
+- variadic functions (`nums ...int`): think `...rest` operator in Javascript
+  - under the hood this is a slice of ints
+  - we can do slicing on slices
+
+```go
+// under the hood this is a slice of ints
+func spread(nums ...int) int {
+  total := 0
+  for _, num := range nums {
+    total += num
+  }
+  return total
+}
+
+// 1. call the function with variadic param
+spread((1, 3, 6, 4)) // 14
+
+// 2. call the variadic function by slicing 
+mySlice := []int{1, 3, 6, 4}
+spread(mySlice[:2]) // 4 (1+3)
+```
 
 - `no function overloading` (like C, unlike C++)
+
+### Deferring Functions
+
+- functions can be `deferred` with `defer` key-word:
+  - we can defer multiple functions
+  - deferred functions are executed in LIFO order
+  - deferred function can be closures
+
+```go
+func ReadWrite() bool {
+  file.Open("filename")
+  // this will be executed right before
+  // the function exits
+  defer file.Close() 1
+  // Do your thing
+  if failureX {
+    return false
+  }
+  if failureY {
+    return false
+  }
+  return true
+}
+
+for i := 0; i < 5; i++ {
+  defer fmt.Printf("%d ", i) // 4 3 2 1 0.
+}
+
+func f() (ret int) {
+  // closure that is immediately invoked
+  defer func() { 
+    ret++
+  }()
+  return 0 // the function will return 1!
+}
+```
+
+### Panic and Recover
+
+> `Panic` is a built-in function that stops the ordinary flow of control and begins panicking. When the function F calls panic, execution of F stops, any deferred functions in F are executed normally, and then F returns to its caller. To the caller, F then behaves like a call to panic. The process continues up the stack until all functions in the current goroutine have returned, at which point the program crashes. Panics can be initiated by invoking panic directly. They can also be caused by runtime errors, such as out-of-bounds array accesses.
+
+- avoid use panic
+
+> `Recover` is a built-in function that regains control of a panicking goroutine. Recover is only useful inside deferred functions. During normal execution, a call to recover will return nil and have no other effect. If the current goroutine is panicking, a call to recover will capture the value given to panic and resume normal execution.
+
+```go
+func Panic(f func()) (b bool) { 
+  defer func() { 
+    if x := recover(); x != nil {
+      b = true
+    }
+  }()
+  // if this function causes panic,
+  // the defer function will be called -->
+  // recover will be initiated
+  f() 
+  return // true 
+}
+
+func wrongAccess() {
+  var a []int
+  a[3] = 5
+}
+// will cause panic but will be 
+// gracefully handled by recover
+res := Panic(wrongAccess)
+```
+
+## Packages
+
+- a collection of functions and data
+- rules:
+  - declared with `package` keyword
+  - the filename does not have to match the package name
+  - naming convention: lowercase, single word names 
+  - may consist of multiple files
+- functions and data types can be exported from packages (if named with capital letter)
+- public functions can be accessed by <package>.FunctionName()
+- packages can be used if installed:
+
+```bash
+% mkdir $GOPATH/src/even
+% cp even.go $GOPATH/src/even
+% go build
+% go install
+```
 
 ## OOP
 
