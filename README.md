@@ -523,23 +523,26 @@ for i, c := range "go" {
 
 ### Pointers
 
-like in C++
+- like in C++ but no pointer arithmetic --> act more like references:
+  - `*p++` will be interpreted as `(*p)++`: dereference and then increment the value
+- there is `new` but no `delete`
+- newly declared pointer points to nothing, has a `nil`-value (nullptr)
+- dereferenced with `*`
 
-value is passed as a copy of the underlying value and here we operate on that copy only
 ```go
+// value is passed as a copy of the underlying value 
+// and here we operate on that copy only
 func passedByValue(value int) {
   value = 0
 }
-```
-mutate the underlying value by assigning a new int at the referenced address
-```go
-func passedByReference(reference *int) {
-  *reference = 0
-}
-```
 
-underlying memory addresses:
-```go
+// mutate the underlying value by assigning 
+// a new int at the referenced address
+func passedByReference(ref *int) {
+  // dereference and assign 0 to the value
+  *ref = 0
+}
+
 func main() {
   i := 0
   fmt.Println(i)
@@ -551,8 +554,21 @@ func main() {
   fmt.Println(i)
   fmt.Println(&i)
 }
-
 ```
+
+#### Memory Allocation
+
+- the compiler decides where to allocate based on `escape analysis`
+- using `new` doesn't imply using the heap
+- can be done with `new` and `make`
+- `new(T)` returns *T pointing to a zeroed T
+- `make(T)` returns an initialized T
+
+> The built-in function `new` is essentially the same as in other languages: `new(T)` allocates zeroed storage for a new item of type `T` and returns its address, a value of type `*T`. Or in other words, it `returns a pointer to a newly allocated zero value of type T`.
+
+> The built-in function `make(T, args)` serves a purpose different from new(T). It `creates slices, maps, and channels only`, and it `returns an initialized` (not zero!) `value of type T`, and `not a pointer: *T`. The reason for the distinction is that these three types are, under the covers, references to data structures that must be initialized before use. A slice, for example, is a three-item descriptor containing a pointer to the data (inside an array), the length, and the capacity; until those items are initialized, the slice is nil. For slices, maps, and channels, make initializes the internal data structure and prepares the value for use.
+
+For example, `make([]int, 10, 100)` allocates an array of 100 ints and then creates a slice structure with length 10 and a capacity of 100 pointing at the first 10 elements of the array. In contrast, `new([]int)` returns a pointer to a newly allocated, zeroed slice structure, that is, a pointer to a nil slice value.
 
 ### Structs
 
@@ -628,6 +644,7 @@ It's idiomatic to initiate a new struct with a factory function.
 ## Functions
 
 - `pass-by-value`
+- func ([receiver]) [name] ([params]) ([return values])
 - `multiple return values` (think Typescript or Python tuples):
   - useful to return a value and error
   - removes the need for in-band error returns (such as -1 for EOF) and modifying an argument

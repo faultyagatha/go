@@ -19,6 +19,18 @@ func addOne(x *int) {
 	*x += 1
 }
 
+func getVal() int {
+	n := new(int)
+	// return dereferenced ptr
+	return *n
+}
+
+func getPtr() *int {
+	n := 4
+	// return a ptr
+	return &n
+}
+
 //******** POINTER RECEIVERS
 //we can declare methods with pointer receivers
 //these methods can modify the value to which the receiver points
@@ -40,7 +52,7 @@ func (v *Vertex) Scale(f float64) {
 //below we use a pointer in a usual manner
 func Scale(v *Vertex, f float64) {
 	//go implicitly dereferences the pointer
-	//in C: v->v.X
+	//in C: v->X
 	v.X = v.X * f
 	v.Y = v.Y * f
 }
@@ -63,4 +75,16 @@ func main() {
 	fmt.Println("x after addOneByCopy: ", x) //2
 	addOne(xPtr)
 	fmt.Println("x after addOne: ", x) //3
+
+	// new vs make
+	var ptr *[]int = new([]int)
+	var sl []int = make([]int, 10)
+	ptr = &sl
+	fmt.Println("ptr address: ", ptr)
+	*ptr = sl
+	fmt.Println("ptr points to the value: ", *ptr) // [0 0 0 0 0 0 0 0 0 0]
+	val := getVal()
+	ptr2 := getPtr()
+	fmt.Println("val: ", val) 
+	fmt.Println("ptr2 points to the value: ", *ptr2) 
 }
