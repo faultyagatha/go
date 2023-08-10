@@ -570,20 +570,105 @@ func main() {
 
 For example, `make([]int, 10, 100)` allocates an array of 100 ints and then creates a slice structure with length 10 and a capacity of 100 pointing at the first 10 elements of the array. In contrast, `new([]int)` returns a pointer to a newly allocated, zeroed slice structure, that is, a pointer to a nil slice value.
 
+#### Composite Literals
+- construct new composite values each time they are evaluated
+- can be used with objects (structs), arrays, slices, maps
+- consist of the type of the literal followed by a brace-bound list of elements
+
+```go
+buffer := [10]string{}             // len(buffer) == 10
+intSet := [6]int{1, 2, 3, 5}       // len(intSet) == 6
+// The notation ... specifies an array length equal to the maximum element index plus one.
+days := [...]string{"Sat", "Sun"}  // len(days) == 2
+
+[...]Point{{1.5, -3.5}, {0, 0}}     // same as [...]Point{Point{1.5, -3.5}, Point{0, 0}}
+[][]int{{1, 2, 3}, {4, 5}}          // same as [][]int{[]int{1, 2, 3}, []int{4, 5}}
+[][]Point{{{0, 1}, {1, 2}}}         // same as [][]Point{[]Point{Point{0, 1}, Point{1, 2}}}
+map[string]Point{"orig": {0, 0}}    // same as map[string]Point{"orig": Point{0, 0}}
+map[Point]string{{0, 0}: "orig"}    // same as map[Point]string{Point{0, 0}: "orig"}
+
+type PPoint *Point
+[2]*Point{{1.5, -3.5}, {}}          // same as [2]*Point{&Point{1.5, -3.5}, &Point{}}
+[2]PPoint{{1.5, -3.5}, {}}          // same as [2]PPoint{PPoint(&Point{1.5, -3.5}), PPoint(&Point{})}
+
+noteFrequency := map[string]float32{
+	"C0": 16.35, "D0": 18.35, "E0": 20.60, "F0": 21.83,
+	"G0": 24.50, "A0": 27.50, "B0": 30.87,
+}
+```
+
+- pointers and composite literals:
+
+```go
+// Option 1:
+func NewFile(fd int, name string) *File {
+  if fd < 0 {
+      return nil
+  }
+  f := new(File)
+  f.fd = fd
+  f.name = name
+  f.dirinfo = nil
+  f.nepipe = 0
+  return f
+}
+
+// Option 2: using composite literals
+func NewFile(fd int, name string) *File {
+  if fd < 0 {
+      return nil
+  }
+  f := File{fd, name, nil, 0}
+  // It is OK to return the address of a local variable,
+  // the storage associated with the variable survives after the function returns.
+  return &f	
+}
+```
+- in the example above, the expressions `new(File)` and `&File{}` are equivalent. Note: use of new is discouraged.
+
 ### Structs
 
-like C structs
+- like C structs
+- methods can be associated with data assigned explicitely:
+  - a hidden object (struct instance, for example) will be passed by value implicitely -->
+  - use pointer to avoid value copying
 
-methods can be associated with data assigned explicitely
+#### Calling Methods on Structs
 
-in this case, a hidden object (struct instance, for example) will be passed by value implicitely - use pointer to avoid value copying (see the code example).
+1. Create a function that takes the type as an argument
 
+2. Create a function that works on the type (idiomatic to Go)
+
+```go
+type person {
+  name string
+  age int
+}
+
+// using 1-st option
+func initPerson1(p *person, n string, a int) { /* */ }
+
+// using 2-d option
+func (p *person) initPerson2(n string, a int) { /* */ }
+
+var p *person
+// using 1-st option
+initPerson1(p, "Stan", 39)
+// using 2-d option
+p.initPerson2("Stan", 39)
+```
+
+> IMPORTANT: `If x is addressable and &x’s method set contains m, x.m() is shorthand for (&x).m()` 
+
+```go
+var p person	              // Not a pointer but initPerson2() should be called on a pointer to person -->
+p.initPerson2("Stan", 39)   // Go will translate this call to (&p).initPerson2("Stan", 39)
+```
 
 ```go
 type rect struct {
   width, height int
 }
-
 
 // Pointer receiver type
 func (r *rect) area() int {
@@ -637,7 +722,7 @@ This syntax creates a new struct.
 }
 ```
 
-It's idiomatic to initiate a new struct with a factory function.
+- it's idiomatic to initiate a new struct with a factory function.
 
 [when to use a value receiver or a pointer receiver](https://github.com/golang/go/wiki/CodeReviewComments#receiver-type)
 
@@ -819,20 +904,44 @@ res := Panic(wrongAccess)
 
 - polymorphism is achieved with `structs` that can have member functions (sort of). It's done externally, in the code (see examples).
 
-Go is not a classic OOP language. There is no type hierarchy.
-Go OOP Features:
+- Go is not a classic OOP language
+- there is no type hierarchy
+
+- Go OOP Features:
 1. Structs: serve similar purpose to classes
 2. Methods: can operate on particular type and mock a member function
-3. Embedding: we can embed anonymous types inside each other.
+3. Embedding: we can embed anonymous types inside each other (see below).
 4. Interfaces: have no implementation. Objects that implement all the interface methods automatically implement the interface. There is no inheritance or subclassing or "implements" keyword.
 
-`Encapsulation`:
-Go encapsulates things at the package level. Names that start with a lowercase letter are only visible within that package. You can hide anything in a private package and just expose specific types, interfaces, and factory functions.
+### Encapsulation
 
-`Inheritance`:
-composition by embedding an anonymous type is equivalent to implementation inheritance.
+- Go encapsulates things at the package level
+- names that start with a lowercase letter are only visible within that package
+- one can hide anything in a private package and just expose specific types, interfaces, and factory functions.
 
-`Polymorphism`:
+### Inheritance via Embedding
+
+- Go encourages composition as a way to extend the functionality of types
+- composition by embedding an anonymous type is equivalent to implementation inheritance.
+
+
+```go
+// NewMutex is equal to Mutex, 
+// but it does not have any of the methods of Mutex
+type NewMutex Mutex
+
+// inherited the method set from Mutex
+type PrintableMutex struct {Mutex}.
+```
+
+- three kinds of embedding in Go:
+
+1. Structs in structs 
+2. Interfaces in interfaces
+3. Interfaces in structs
+
+### Polymorphism
+
 a variable of type interface can hold any value which implements the interface. This property of interfaces is used to achieve polymorphism in Go.
 
 ## Error handling
