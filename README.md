@@ -6,6 +6,7 @@
 - [Advanced Data Types](#advanced-data-types)
 - [Functions](#functions)
 - [Packages](#packages)
+- [Interfaces](#interfaces)
 
 
 ## File Organisation
@@ -112,7 +113,7 @@ use (
 )
 ```
 
-## Variables, Primitive Types and Keywords
+## Variables, Primitive Types, Keywords
 
 - uninitialised values are implicitly initialised with `0`, `nil`, or `''` depending on data type.
 - `Go is pass by value`:
@@ -726,6 +727,28 @@ This syntax creates a new struct.
 
 [when to use a value receiver or a pointer receiver](https://github.com/golang/go/wiki/CodeReviewComments#receiver-type)
 
+### Type Conversion
+
+- only explicit
+- not all conversions are allowed
+
+```go
+// convert from a string to a slice of bytes 
+// because of UTF-8 encoding, some characters in the string may 
+// end up in 1, 2, 3 or 4 bytes
+mystring := "hello this is string"
+byteslice := []byte(mystring)
+
+// convert from a string to a slice of runes
+runeslice  := []rune(mystring)
+
+// from a slice of bytes or runes to a string.
+b := []byte{'h','e','l','l','o'} // Composite literal.
+s := string(b)
+i := []rune{257,1024,65}
+r := string(i)
+```
+
 ## Functions
 
 - `pass-by-value`
@@ -972,16 +995,39 @@ func main() {
 
 ## Interfaces
 
-- uses `interfaces` (method signatures), same as Typescript. 
+- uses `interfaces` (method signatures), same as Typescript
+- Go interface is similar to pure abstract base class in C++
 
-> Unlike Typescript, in Go, a `type` implements an interface by implementing its methods. There is no explicit declaration of intent, no "implements" keyword. Under the hood, interface values can be thought of as a tuple of a value and a concrete type: `(value, type)`.
+> Unlike Typescript, in Go, a `type` implements an interface by implementing its methods. There is no explicit declaration of intent, `no implements keyword`. Under the hood, interface values can be thought of as a tuple of a value and a concrete type: `(value, type)`.
 
-An interface and a type are `structurally equivalent` if they both define a set of methods of the same name, and where methods from each share the same number of parameters and return values, of the same data type.
+> An interface and a type are `structurally equivalent` if they both define a set of methods of the same name, and where methods from each share the same number of parameters and return values, of the same data type.
 
-In Go, we can define as many little interfaces as we want.
+> Go can convert from one interface type to another. `The conversion is checked at run time`. If the conversion is invalid – if the type of the value stored in the existing interface value does not satisfy the interface to which it is being converted – the program will fail with a run time error.
+
+- we can define as many little interfaces as we want
+
 > `Duck typing` (structural typing): 'If it walks like a duck, swims like a duck, and quacks like a duck, then it probably is a duck.'
 
-No need to define `implements` means that the interfaces defined in third-party packages can still be included in our own code base (they only need to match the methods).
+> No need to define `implements` means that the interfaces defined in third-party packages can still be included in our own code base (they only need to match the methods).
+
+```go
+type S struct { i int }
+func (p *S) Get() int  { return p.i }
+func (p *S) Put(v int) { p.i = v }
+
+// S is a valid implementation for interface I
+type I interface {
+  Get() int
+  Put(int)
+}
+
+func f(p I) { 
+  // because p implements I, it must have the Get() method
+  fmt.Println(p.Get()) 
+  p.Put(1) 3
+}
+```
+- interfaces can be declared inline
 
 ```go
 type NewUser struct {
@@ -1033,6 +1079,25 @@ func (ds *DataStore) CreateWidget(w *DBWidget) error {
 }
 
 // ... + more methods
+```
+
+- `type switch` checks the type of the data at `run time` (similar to C):
+
+```go
+type R struct { i int }
+func (p *R) Get() int  { return p.i }
+func (p *R) Put(v int) { p.i = v }
+
+// use type switch to find the actual type
+func f(p I) {
+  switch t := p.(type) { 
+    case *S: 
+      // do something
+    case *R: 
+      // do somthing
+    default: 
+  }
+}
 ```
 
 ## Concurrency
