@@ -682,9 +682,9 @@ func (r rect) perim() int {
 }
 ```
 
-Go knows that the method is on the struct since the struct is a parameter. The method is named in the function call defined at the top i.e. `area()`.
+> Go knows that the method is on the struct since the struct is a parameter. The method is named in the function call defined at the top i.e. `area()`.
 
-Go also magically converts between values and pointers for method calls. So no need for dereference. You can control the behavior by specifying a pointer receiver type to avoid copying the struct on method calls or to allow the method to mutate the underlying values.
+> Go also magically converts between values and pointers for method calls. So no need for dereference. You can control the behavior by specifying a pointer receiver type to avoid copying the struct on method calls or to allow the method to mutate the underlying values.
 
 ```go
 type person {
@@ -726,6 +726,8 @@ This syntax creates a new struct.
 - it's idiomatic to initiate a new struct with a factory function.
 
 [when to use a value receiver or a pointer receiver](https://github.com/golang/go/wiki/CodeReviewComments#receiver-type)
+
+> Important: The `receiver type` must be of the form `T` or `*T` where T is a type name. T is called the receiver base type or just base type. `The base type must not be a pointer or interface type` and must be declared in the same package as the method.
 
 ### Type Conversion
 
@@ -1099,6 +1101,23 @@ func f(p I) {
   }
 }
 ```
+- `.(type)` syntax is `only valid within a switch` statement
+
+- alternative way to find out the type at run-time:
+
+```go
+if t, ok := somevar.(I); ok { // If ok is true, t will hold the type of somevar
+  // ...
+}
+```
+
+- interfaces can be empty: 
+  - every type satisfies the empty interface: `interface{}`
+  - no guarantee of any methods at all: it could contain any type
+
+> Creating a pointer to an interface value is a useless action in Go. It is in fact illegal to create a pointer to an interface value.
+
+- by convention, one-method interfaces are named by the `method name plus the -er suffix`: Reader, Writer, Formatter etc.
 
 ## Concurrency
 
