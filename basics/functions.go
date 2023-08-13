@@ -97,6 +97,15 @@ func (f MyFloat) Abs() float64 {
 	return float64(f)
 }
 
+// recursive function to calculate gcd
+// using Euclidian algorithm
+func gcd(a int, b int) int {
+	if b == 0 {
+		return a
+	}
+	return gcd(b, a%b)
+}
+
 //DEFERRED FUNCTION
 //typically for clean up
 //called only when the surrounding function completes
@@ -151,4 +160,7 @@ func main() {
 
 	f := MyFloat(-math.Sqrt2)
 	fmt.Println(f.Abs())
+
+	res:= gcd(874, 1944)
+	fmt.Printf("gcd %d\n", res)
 }
