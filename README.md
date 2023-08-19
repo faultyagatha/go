@@ -65,6 +65,8 @@ godoc -http=localhost:6060
 
 4. Open your browser at `localhost:6060`
 
+[how to write extended documentation](https://go.dev/src/encoding/gob/doc.go)
+
 ### Compile and Run Code
 
 Example: `helloworld.go`
