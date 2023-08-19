@@ -78,9 +78,16 @@ GO RUNTIME SCHEDULER:
 //when there are other goroutines, main() is non-blocking
 //goroutine exits silently when it's complete
 
+func foo() {
+  fmt.Printf("Foo routine\n")
+}
+
 func main() {
-	go fmt.Printf("New routine")
-	//this is bad cause we make assumptions about time (non-deterministic)
-	time.Sleep(100 * time.Millisecond) //hack to allow "New routine" to be printed
-	fmt.Printf("Main routine")         // without the hack above, prints only "Main routine"
+	go fmt.Printf("New routine\n")
+	go foo()
+	// delayed exit - force main routine to sleep for a while
+	// and let the other routines complete their tasks.
+	// this is bad and non-production code cause we make assumptions about time (non-deterministic)
+	time.Sleep(200 * time.Millisecond)
+	fmt.Printf("Main routine\n")         // without the hack above, prints only "Main routine"
 }
