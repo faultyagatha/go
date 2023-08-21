@@ -55,6 +55,26 @@ if val, ok := dict["someval"]; ok {
 }
 ```
 
+```go
+type Node struct {
+  Next  *Node
+  Value interface{}
+}
+
+var first *Node
+
+visited := make(map[*Node]bool)
+for n := first; n != nil; n = n.Next {
+  if visited[n] {
+    fmt.Println("cycle detected")
+    break
+  }
+
+  visited[n] = true
+  fmt.Println(n.Value)
+}
+```
+
 5. Copy map:
 ```go
 mapOne := map[string]bool{"A": true, "B": true}
@@ -169,3 +189,23 @@ r := string(i)
 - use `[]byte` instead if one of the following conditions applies:
   - the mutability of a []byte will significantly reduce the number of allocations needed
   - you are dealing with an API that uses []byte, and avoiding a conversion to string will simplify your code.
+
+## DB Querying 
+
+```go
+func doQuery() {
+  dbTables := []string{"job_m", "job_s", "job_i"}
+
+  for _, table := range dbTables {
+    err := db.QueryRow("SELECT id FROM ? WHERE target = ?", table, target).Scan(&jobID)
+    if errors.Is(err, sql.ErrNoRows) {
+      continue
+    }
+
+    if err != nil {
+       return fmt.Errorf("whatever")
+    }
+    // if found, do whatever
+  }
+}
+```

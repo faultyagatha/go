@@ -202,7 +202,32 @@ func main() {
 - to make synchronisation possible, we need some global event that is visible to all threads at the same moment
 - we can introduce condition execution that follows this global event
 
-- synchronisation reduces efficiency because we're limiting scheduling --> synchronisation reduces performance
+- synchronisation reduces efficiency because we're limiting scheduling --> 
+- it reduces performance but it is absolutely necessary to restric bad interleavings and get deterministic results
 
-However, synchronisation is necessary 
+```go
+// pseudo code
+// -- TASK 1
+x := 1
+x = x + 1
 
+[GLOBAL EVENT]
+
+if GLOBAL EVENT {
+  print x
+}
+```
+
+#### WaitGroups
+
+- `sync package` contains functions to synchronise between goroutines
+- sync.WaitGroups forces a goroutine to wait for other goroutines
+- contains an internal counter (waiting semaphore)
+  - increment counter for each goroutine to wait for 
+  - decrement counter when each goroutine completes
+  - waiting goroutine cannot continue until counter is 0
+
+- sync.WaitGroups ethods:
+  - `wg.Add()` increments the counter
+  - `wg.Done()` decrements the counter
+  - `wg.Wait()` blocks until the counter == 0; wait is then be passed to main to notify that main can continue

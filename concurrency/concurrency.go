@@ -82,12 +82,20 @@ func foo() {
   fmt.Printf("Foo routine\n")
 }
 
+func incr(x *int) {
+	fmt.Printf("Incr routine %d\n", *x + 1) 
+	*x = *x + 1
+}
+
 func main() {
-	go fmt.Printf("New routine\n")
-	go foo()
+	// go foo()
+	x := 1
+	go incr(&x)
+	fmt.Printf("Main routine %d\n", x)    
+
 	// delayed exit - force main routine to sleep for a while
 	// and let the other routines complete their tasks.
 	// this is bad and non-production code cause we make assumptions about time (non-deterministic)
 	time.Sleep(200 * time.Millisecond)
-	fmt.Printf("Main routine\n")         // without the hack above, prints only "Main routine"
+	fmt.Printf("End main routine\n")         // without the hack above, prints only "Main routine"
 }

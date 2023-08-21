@@ -1297,6 +1297,15 @@ coral := [4]string{"blue coral", "staghorn coral", "pillar coral", "elkhorn cora
 fmt.Printf("%q\n", coral) // ["blue coral" "staghorn coral" "pillar coral" "elkhorn coral"]
 ```
 
+## Tools
+
+[linter](https://golangci-lint.run/)
+
+
+## Libs
+
+[create desktop apps using Go and web](https://github.com/rogchap/wails)
+
 ## Resources
 
 [interfaces](https://fast4ward.online/posts/a-guide-to-interfaces-in-go/)
