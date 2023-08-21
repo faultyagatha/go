@@ -7,6 +7,9 @@
 - [Functions](#functions)
 - [Packages](#packages)
 - [Interfaces](#interfaces)
+- [Concurrency](#concurrency)
+- [Print formatting](#print-formatting)
+- [Resources](#resources)
 
 
 ## File Organisation
@@ -176,7 +179,11 @@ const typedInt int = 1
 
 - `bool`
 - `int`:
-  int (will be based on the length of your machine: 32 or 64 bits), `int8`, `int16`, `int32`, `int64`, `uint8`, `uint16`, `uint32`, `uint64`, `byte` (alias for uint8)
+  int (will be based on the length of your machine: 32 or 64 bits), `int8`, `int16`, `int32`, `int64`, `uint8` (same as byte), `uint16`, `uint32`, `uint64`
+- `byte` (alias for uint8): 
+  - the byte type is only used to semantically distinguish between an unsigned integer 8 and a byte. 
+  - the range of a byte is 0 to 255 (same as uint8)
+  - a []byte can hold non-ASCII characters if they are encoded  as bytes (for example. in UTF-8) but in this case we may not have 1-1 char-byte mapping (UTF-8 codepoints may be represented from 1 to 4 bytes).
 - float:
   note: no float type, `float32` and `float64`
 - `string` (IMMUTABLE!!)
@@ -448,6 +455,7 @@ sl = append(sl[:2], sl[3:]...) //note the spread operator
 - `pass-by-value` for a map is a special case: means passing the address of the map, not the contents of the map
 
 #### Create a Map
+
 - define a map: `map[<from type>]<to type>`
 - use `make()` when only declaring a map
 
@@ -1217,48 +1225,6 @@ func main() {
 
 `Buffered channel`: the sender will block when there is not empty slot of the channel; the receiver will block the channel when it is empty.
 
-### Other
-
-
-`panic`
-
-like `throw` in Javascript but it will throw a non-zero exit code and provide a stack trace to stderr.
-
-```go
-package main
-
-import "os"
-
-func main() {
-	panic("a problem")
-
-	_, err := os.Create("tmp/file")
-	if err != nil {
-		panic(err)
-	}
-}
-```
-
-`defer`
-
-Like a `finally` in Javascript. Except you defer a function call
-
-You have to check for errors even in a deferred function
-
-example: `defer` the cleanup of a file
-
-```go
-func main() {
-  f := createFile("/tmp/defer.txt")
-  defer closeFile(f)
-  writeFile(f)
-}
-```
-
-`Exit`
-
-`os.Exit(3)` to exit with an explicit exit code.
-
 ## Print formatting
 
 bool:                    `%t`
@@ -1329,146 +1295,6 @@ fmt.Printf("Hello, playground %v\n", i) // Hello, playground 5
 coral := [4]string{"blue coral", "staghorn coral", "pillar coral", "elkhorn coral"}
 //"%q\n" is the formatting directive, sets ""
 fmt.Printf("%q\n", coral) // ["blue coral" "staghorn coral" "pillar coral" "elkhorn coral"]
-```
-
-## Tips. Tricks, Interview Questions
-
-1. How to swap values:
-
-simple: a,b, = b,a
-
-```go
-func swap(a, b string) (string, string) {
-  return b, a
-}
-```
-
-2. Mind the difference:
-```go
-type Vertex struct {
-	X int
-	Y int
-}
-
-//returns a copy of a struct
-func funcOne() Vertex {
-  return Vertex{X: 1}
-}
-
-//returns a pointer to the struct
-func funcTwo() *Vertex {
-  return &Vertex{}
-}
-
-//overrides a value in a struct passed to a func
-func funcThree(v *Vertex) {
-  v.X = 1
-}
-```
-3. Concat strings:
-```go
-import (
-    "strings"
-    "fmt"
-)
-
-func main() {
-  var str strings.Builder
-  for i := 0; i < 10; i++ {
-    str.WriteString("hello")
-  }
-}
-```
-
-4. Check if map contains a key:
-```go
-if val, ok := dict["someval"]; ok {
-  //do something
-}
-```
-
-5. Copy map:
-```go
-mapOne := map[string]bool{"A": true, "B": true}
-mapTwo := make(map[string]bool)
-for i, v:= range mapOne {
-  mapTwo[i] = v
-}
-```
-
-6. Reverse a slice of ints:
-```go
-func reverse(s []int) {
-  for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
-    s[i], s[j] = s[j], s[i]
-  }
-}
-```
-
-7. Print const (iotas):
-
-```go
-type State int
-
-//integers under the hood
-const (
-	OffHook State = iota
-	Connecting
-	Connected
-	OnHold
-	OnHook
-)
-
-// ---------------
-// String allows to handle
-// const ints as strings
-//  ---------------
-func (s State) String() string {
-	switch s {
-	case OffHook:
-		return "OffHook"
-	case Connecting:
-		return "Connecting"
-	case Connected:
-		return "Connected"
-	case OnHold:
-		return "OnHold"
-	case OnHook:
-		return "OnHook"
-	}
-	return "Unknown"
-}
-
-func main() {
-  var state State //do something with it
-  ...
-  fmt.Println("The state is currently", state)
-}
-```
-8. FIFO Queue: Push / Pop
-
-```go
-var queue = []int
-//push
-queue = append(queue, 1)
-queue = append(queue, 9)
-queue = append(queue, 19)
-//pop
-var first int
-first, queue = queue[0], queue[1:]
-```
-
-9. LIFO Stack: Push / Pop
-
-```go
-var stack = []int
-//push
-stack = append(stack, 1)
-stack = append(stack, 9)
-stack = append(stack, 19)
-//pop
-var last int
-last, stack = stack[len(stack) - 1], stack[:len(stack) - 1]
 ```
 
 ## Resources
