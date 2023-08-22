@@ -231,3 +231,74 @@ if GLOBAL EVENT {
   - `wg.Add()` increments the counter
   - `wg.Done()` decrements the counter
   - `wg.Wait()` blocks until the counter == 0; wait is then be passed to main to notify that main can continue
+
+### Communication
+
+- goroutines usually work together to perform a bigger task
+- they often need to send data to collaborate
+
+----
+EXAMPLE: find the product of 4 int
+  - make 2 goroutines, each multiplies a pair
+  - main goroutine multiplies the 2 results
+
+--> 
+- need to send ints from main routine to the two sub-routines
+- need to send results from sub-routines back to main routine
+- naive implementation:
+
+```go
+package main
+
+import (
+	"fmt"
+	"sync"
+)
+
+func mult1(a int, b int, res *int, wg *sync.WaitGroup) {
+	fmt.Printf("mult1 routine\n")
+	*res = a * b
+	wg.Done()
+}
+
+func mult2(a int, b int, res *int, wg *sync.WaitGroup) {
+	fmt.Printf("mult1 routine\n")
+	*res = a * b
+	wg.Done()
+}
+
+func main() {
+	var res1 int
+	var res2 int
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go mult1(2, 3, &res1, &wg)
+	wg.Add(1)
+	go mult2(3, 3, &res2, &wg)
+	wg.Wait()
+	fmt.Printf("Main routine %d\n", res1)
+	fmt.Printf("Main routine %d\n", res2)
+	res3 := res1 * res2
+	fmt.Printf("Main routine %d\n", res3)
+}
+```
+- but the example above is simple, real-live cases are complicated
+- we need a way of comminicating between goroutines
+----
+
+#### Channels
+
+- `channels` transfer data between goroutines
+- channels are types to transfer types data
+- `make()` creates a channel
+- send and receive data using `<-` operator
+
+```go
+// create a channel
+c := make(chan int)
+
+// send data on a channel
+c <- 3
+// receive data from a channel
+x := <- c
+```

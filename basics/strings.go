@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -35,6 +36,11 @@ func stringToRuneSlice(s string) []rune {
 		r = append(r, runeValue)
 	}
 	return r
+}
+
+func printRune(r rune) {
+	fmt.Printf("Rune 1: %c; Unicode: %U; Type: %s\n", r,
+    r, reflect.TypeOf(r))
 }
 
 func sortStringByCharacter(s string) string {
@@ -137,4 +143,6 @@ func main() {
 	words := []string{"hello", "world"}
 	list := buildList(words)
 	fmt.Println("list: ", list.String()) //<ul><li>hello</li><li>world</li></ul>
+
+	printRune('\a')
 }

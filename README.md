@@ -8,7 +8,7 @@
 - [Packages](#packages)
 - [Interfaces](#interfaces)
 - [Concurrency](#concurrency)
-- [Print formatting](#print-formatting)
+- [Print Formatting](#print-formatting)
 - [Resources](#resources)
 
 
@@ -206,6 +206,12 @@ fmt.Printf("%s\n", s2)
 - `rune` (alias for int32) is an UTF-8 encoded code point
 
 > Useful example: iterating over characters in a string. You could loop over each byte (which is only equivalent to a character when strings are encoded in 8-bit ASCII, which they are not in Go!). But to get the actual characters you should use the rune type.
+
+> NOTE: `A string is a sequence of bytes and not of a Rune`. A string may contain Unicode text encoded in UTF-8. But, the Go source code encodes as UTF-8, therefore, no need to encode the string in UTF-8.
+
+> `UTF-8 encodes all the Unicode in the range of 1 to 4 bytes`, where 1 byte is used for ASCII and the rest for the Rune.
+
+> ASCII contains a total of 256 elements and out of which, 128 are characters and 0-127 are identified as code points. Here, code point refers to the element which represents a single value.
 
 - `complex numbers`:
   - native support
@@ -1234,6 +1240,7 @@ float32, complex64, etc: `%g`
 string:                  `%s`
 chan:                    `%p`
 pointer:                 `%p`
+rune:                    `%c`
 
 General:
 - `%v`	the value in a default format
@@ -1273,6 +1280,10 @@ String and slice of bytes:
 - `%x`	base 16, lower-case, two characters per byte
 - `%X`	base 16, upper-case, two characters per byte
 
+Byte:
+- `%s`the uninterpreted bytes of the string or slice
+- `%c`	character
+ 
 Slice:
 - `%p`  base 16 notation, with leading 0x
 
