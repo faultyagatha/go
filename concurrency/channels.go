@@ -83,6 +83,6 @@ func main() {
 	go fibonacci(cap(ch), ch)
 	// receives values from the channel repeatedly until it's closed
 	for i := range ch {
-		fmt.Println(i)
+		fmt.Println("fibonacci: ", i)
 	}
 }
