@@ -311,8 +311,8 @@ func main() {
 
 - `channels` is the key data-type for synchronising and passing messages between goroutines
 - under the hood, channels are queues with a logical interface of `send()` and `recv()`
-- `channels` transfer data between goroutines
-- channels are types to transfer types data
+- `channels` transfer data `synchroniously` between goroutines
+- channels `are typed` and transfer `typed data`
 - passing a pointer between channels is idiomatic in Go
 - `make()` creates a channel
 - send and receive data using `<-` operator
@@ -350,7 +350,9 @@ func main() {
 }
 ```
 - by default, channels in go are `unbuffered`
-- unbuffered channels cannot hold data in transit --> they are `blocking`
+- unbuffered channels require both sending and receiving goroutine to be ready at the same instance before any send or receive operation is complete -->
+- unbuffered channels cannot hold data in transit --> 
+- they are `blocking`
 - `sending blocks` until data is received
 - `receiving blocks` until data is sent
 - channel communication is synchronous 
