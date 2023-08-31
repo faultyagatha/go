@@ -152,6 +152,16 @@ Go uses the `message-passing` paradigm of comminication using the concept of cha
 
 - race conditions must be avoided
 - they `occur due to communication`
+- Go has in-built race detector
+
+```bash
+# example file with race conditions is racecondition.go 
+# build the program with race detector flag on
+go build -race concurrency/racecondition.go 
+
+# run the program
+./racecondition
+```
 
 ### Task Communication
 
@@ -362,6 +372,7 @@ func main() {
 
 - channels can contain a limited number of objects (default is 0)
 - `capacity` is the N of objects it can hold in transit
+- a buffered channel provides `no guarantee` that an `exchange` between two goroutines is performed `at the instant the send and receive takes place`
 
 ```go
 // means I can do 3 sends and still not block

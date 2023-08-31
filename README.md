@@ -83,6 +83,8 @@ or use a shortcut: `go run helloworld.go`
 
 From Go 1.18 onwards there is native support for multi-module workspaces. This is done by having a `go.work` file present in your parent directory.
 
+> In workspace mode, the go. work file will be used to determine the set of main modules used as the roots for module resolution, instead of using the normally-found go.mod file to specify the single main module. 
+
 For a directory structure such as:
 
 ```

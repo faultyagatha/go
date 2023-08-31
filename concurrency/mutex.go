@@ -10,8 +10,10 @@ import (
 //coroutines can interfere with each other
 
 //in this example, there are possible interleavings
-var i int = 0
-var wg sync.WaitGroup
+var (
+	i int = 0
+	wg sync.WaitGroup
+)
 
 func increm() {
 	i = i + 1
