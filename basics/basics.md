@@ -11,7 +11,6 @@
 - [Print Formatting](#print-formatting)
 - [Resources](#resources)
 
-
 ## File Organisation
 
 - programs are organised into packages
@@ -119,6 +118,10 @@ use (
     ./project-two
 )
 ```
+
+### Change a version of go.mod
+
+`go mod edit -go=1.18`
 
 ## Variables, Primitive Types, Keywords
 
