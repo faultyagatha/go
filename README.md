@@ -1137,6 +1137,50 @@ if t, ok := somevar.(I); ok { // If ok is true, t will hold the type of somevar
 
 - by convention, one-method interfaces are named by the `method name plus the -er suffix`: Reader, Writer, Formatter etc.
 
+### Interfaces and Slices
+
+- we use `interface{}` in the time of uncertainty to be later substituted by some other type
+
+- when the substitution takes place, Go implicitly converts `interface{}` to the type `T` we need in `O(1)` time (since the time is constant, Go hides this operation)
+
+> In Go, there is a general rule that `syntax should not hide complex/costly operations`.
+
+- however, when we use `[]interface{}` as a substitution of the `[]T`, the conversion takes place at `O(n)` because each element of the slice must be converted to a desired type (since the time is not constant and see the general rule above, Go doesn't hide this operation) --> 
+
+- developers need to convert each instance of []interface to []T by themselves by copying the elements individually to the destination slice. 
+
+```go
+// This example converts a slice of int to a slice of interface{}
+t := []int{1, 2, 3, 4}
+s := make([]interface{}, len(t))
+for i, v := range t {
+    s[i] = v
+}
+```
+
+> The one exception to this rule is `converting strings`. When converting a string to and from a []byte or a []rune, Go does O(n) work even though conversions are "syntax".
+
+#### Reasons for `T` and `interface{}` conversion
+
+- type `T` and `interface{}` which holds a value of T have different representations in memory --> they can't be trivially converted.
+
+  - A variable of type `T` is just its value in memory. There is no associated type information (in Go every variable has a single type known at compile time not at run time). It is represented in memory like this:
+
+    - value
+
+
+  - An `interface{}` holding a variable of type T is represented in memory like this:
+
+    - pointer to type T
+    - value
+
+--> 
+Converting []T to []interface{} would involve creating a new slice of interface{} values which is a non-trivial operation since the in-memory layout is completely different.
+
+
+- example from [stackoverflow](https://stackoverflow.com/questions/12994679/slice-of-struct-slice-of-interface-it-implements)
+
+
 ## Concurrency
 
 - `concurrency` is build in

@@ -33,7 +33,6 @@ func ReadAll2(readers ...io.Reader) (string, error) {
 // ---------------
 // Example of generics
 // that could solve the problem.
-// Generics is not yet in Go
 //  ---------------
 /*
 func ReadAllGeneric[R io.Reader](readers []R) (string, error) {
