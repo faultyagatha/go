@@ -9,6 +9,8 @@
 - [Interfaces](#interfaces)
 - [Concurrency](#concurrency)
 - [Print Formatting](#print-formatting)
+- [Debugging](#debugging)
+- [Tools](#tools)
 - [Resources](#resources)
 
 ## File Organisation
@@ -1184,6 +1186,50 @@ Converting []T to []interface{} would involve creating a new slice of interface{
 - example from [stackoverflow](https://stackoverflow.com/questions/12994679/slice-of-struct-slice-of-interface-it-implements)
 
 
+### Interfaces and Structs
+
+- cast interface to struct using explicit casting
+
+```go
+// queue.go
+// Queue node
+type node struct {
+	Value interface{} 
+	next  *node
+}
+
+// Queue is a shape of a queue
+type Queue struct {
+	Len  int
+	First *node
+	Last *node
+}
+
+func (q *Queue) Enqueue(v interface {}) {}
+
+// binarytree.go
+// Binary tree node
+type Node struct {
+	Value byte
+	Left *Node
+	Right *Node
+}
+
+func (t *BinaryTree) CreateUQueue(data []byte) *BinaryTree {
+  var q queue.Queue
+  	// Add a root node to the tree
+	node := &Node{Value: data[0]}
+  	// Add this node to the queue
+	q.Enqueue(t.Root) // we don't need to cast because interface{} can be anything
+  // ...
+  curr, _ := q.Dequeue() // curr is of type interface{} -->
+  // Add the left node (we need to perform casting from interface to *Node because curr as interface has no member .Left)
+  curr.(*Node).Left = &Node{Value: data[i]}
+  // ...
+}
+```
+
+
 ## Concurrency
 
 - `concurrency` is build in
@@ -1357,6 +1403,10 @@ coral := [4]string{"blue coral", "staghorn coral", "pillar coral", "elkhorn cora
 fmt.Printf("%q\n", coral) // ["blue coral" "staghorn coral" "pillar coral" "elkhorn coral"]
 ```
 
+## Debugging
+
+[VS Code](https://www.youtube.com/watch?v=6r08zGi38Tk&list=PLj6YeMhvp2S40Q-TEPEKOeypLvTVd5uME&index=2&ab_channel=VisualStudioCode)
+
 ## Tools
 
 [linter](https://golangci-lint.run/)
@@ -1365,6 +1415,9 @@ fmt.Printf("%q\n", coral) // ["blue coral" "staghorn coral" "pillar coral" "elkh
 ## Libs
 
 [create desktop apps using Go and web](https://github.com/rogchap/wails)
+[pdf processor](https://pdfcpu.io/generate/booklet)
+[PDFTables.com](https://github.com/pdftables/go-pdftables-api/tree/master)
+
 
 ## Resources
 
