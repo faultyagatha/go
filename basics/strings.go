@@ -145,4 +145,11 @@ func main() {
 	fmt.Println("list: ", list.String()) //<ul><li>hello</li><li>world</li></ul>
 
 	printRune('\a')
+
+	//***** Byte length vs string length
+	strC := "百度一下, 你就知道" 
+	// an array of the Unicode code points (the number of characters)
+	fmt.Println("String length", len([]rune(strC)))
+	// the length of the underlying byte array
+	fmt.Println("Byte length", len(strC))
 }

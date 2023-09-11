@@ -224,6 +224,14 @@ fmt.Printf("%s\n", s2)
   - native support
   - `complex128` (64 bit real and imaginary parts) or `complex64` (32 bit real and imaginary parts)
 
+```go
+str := "百度一下, 你就知道" 
+// an array of the Unicode code points (the number of characters)
+fmt.Println("String length", len([]rune(str)))
+// the length of the underlying byte array
+fmt.Println("Byte length", len(str))
+```
+
 ### Go Keywords
 
 - import
