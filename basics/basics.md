@@ -870,6 +870,8 @@ spread(mySlice[:2]) // 4 (1+3)
 
 - `no function overloading` (like C, unlike C++)
 
+[more on closures](https://eli.thegreenplace.net/2019/go-internals-capturing-loop-variables-in-closures/)
+
 ### Deferring Functions
 
 - functions can be `deferred` with `defer` key-word:
@@ -995,6 +997,8 @@ type PrintableMutex struct {Mutex}.
 1. Structs in structs 
 2. Interfaces in interfaces
 3. Interfaces in structs
+
+[embedding in go](https://eli.thegreenplace.net/2020/embedding-in-go-part-1-structs-in-structs/)
 
 ### Polymorphism
 
@@ -1414,6 +1418,8 @@ fmt.Printf("%q\n", coral) // ["blue coral" "staghorn coral" "pillar coral" "elkh
 ## Debugging
 
 [VS Code](https://www.youtube.com/watch?v=6r08zGi38Tk&list=PLj6YeMhvp2S40Q-TEPEKOeypLvTVd5uME&index=2&ab_channel=VisualStudioCode)
+
+[delve](https://github.com/go-delve/delve/tree/master)
 
 ## Tools
 

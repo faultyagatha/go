@@ -1,4 +1,4 @@
-package moduletwo
+package main
 
 import (
 	"fmt"

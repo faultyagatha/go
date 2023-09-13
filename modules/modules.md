@@ -10,3 +10,5 @@
 
 - if the repository is not yet published, the module path can be relative to the project
 `go mod edit -replace github.com/faultyagatha/go/modules/moduleone=../moduleone`
+
+[modules](https://github.com/golang/go/wiki/Modules#modules)
