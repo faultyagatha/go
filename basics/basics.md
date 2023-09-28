@@ -1173,6 +1173,17 @@ s := make([]interface{}, len(t))
 for i, v := range t {
     s[i] = v
 }
+
+// This function converts a slice of interface{} to a slice of int
+func interfaceToInt(el[]interface{}) []int{
+	intSlice := make([]int, len(el))
+	for i, v := range el {
+		if intVar, ok := v.(int); ok { // If ok is true, t will hold the type of intVar
+			intSlice[i] = intVar
+		}
+	}
+	return intSlice
+}
 ```
 
 > The one exception to this rule is `converting strings`. When converting a string to and from a []byte or a []rune, Go does O(n) work even though conversions are "syntax".
@@ -1459,10 +1470,17 @@ Videos:
 Books:
 [The Go Programming Language](http://gopl.io/)
 [Go in action](https://www.manning.com/books/go-in-action)
+[Go in action code on github](https://github.com/goinaction/code/)
 
 Other:
 [how to organize your Go project](https://medium.com/@benbjohnson/standard-package-layout-7cdbc8391fc1#.ds38va3pp)
 [walkthrough the various standard library packages](https://medium.com/go-walkthrough)
 [Go resources](https://github.com/golang/go/wiki#learning-more-about-go)
 
-https://github.com/dariubs/GoBooks
+[Go books](https://github.com/dariubs/GoBooks)
+[slog](https://go.dev/blog/slog)
+
+Cool Projects:
+[Go graphics](https://github.com/fogleman/gg)
+[Go convexhull](https://github.com/hemantasapkota/go-convexhull)
+
