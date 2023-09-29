@@ -591,12 +591,37 @@ func main() {
 #### Memory Allocation
 
 - the compiler decides where to allocate based on `escape analysis`
-- using `new` doesn't imply using the heap
+- using `new` doesn't imply using the heap (!!)
 - can be done with `new` and `make`
 - `new(T)` returns *T pointing to a zeroed T
 - `make(T)` returns an initialized T
 
 > The built-in function `new` is essentially the same as in other languages: `new(T)` allocates zeroed storage for a new item of type `T` and returns its address, a value of type `*T`. Or in other words, it `returns a pointer to a newly allocated zero value of type T`.
+
+```c++
+int *pNum = new int;  // allocated memory but memory location contains junk value
+int *pNum1{ new int}; // allocated memory but memory location contains junk value
+```
+
+```go
+new(Point)    // allocated enough memory to store Point but memory location contains junk value
+&Point{}      // the same as above but using & 
+&Point{2, 3}  // combines allocation and initialization
+
+new(int)      // allocated enough memory to store int but memory location contains junk value
+&int          // illegal (!!) for simple data types
+
+// Works, but it is less convenient to write than new(int)
+var i int
+&i
+
+p := new(chan int)   // p has type: *chan int
+c := make(chan int)  // c has type: chan int
+
+// if Go didn't have new and make but had the built-in function NEW, the code would have looked like this:
+p := NEW(*chan int)  // * is mandatory
+c := NEW(chan int)
+```
 
 > The built-in function `make(T, args)` serves a purpose different from new(T). It `creates slices, maps, and channels only`, and it `returns an initialized` (not zero!) `value of type T`, and `not a pointer: *T`. The reason for the distinction is that these three types are, under the covers, references to data structures that must be initialized before use. A slice, for example, is a three-item descriptor containing a pointer to the data (inside an array), the length, and the capacity; until those items are initialized, the slice is nil. For slices, maps, and channels, make initializes the internal data structure and prepares the value for use.
 
@@ -1193,20 +1218,25 @@ func interfaceToInt(el[]interface{}) []int{
 - type `T` and `interface{}` which holds a value of T have different representations in memory --> they can't be trivially converted.
 
   - A variable of type `T` is just its value in memory. There is no associated type information (in Go every variable has a single type known at compile time not at run time). It is represented in memory like this:
-
     - value
 
 
-  - An `interface{}` holding a variable of type T is represented in memory like this:
-
-    - pointer to type T
+  - An `interface{}` holding a variable of type T  takes up two words  (one word for the type of what is contained, the other word for either the contained data or a pointer to it). It is represented in memory like this:
+    - pointer to type T 
     - value
 
+--> a slice with length N and with type `[]interface{}` is backed by a chunk of data that is `N*2 words` long. This is different than the chunk of data backing a slice with type `[]MyType` and the same length. Its chunk of data will be `N * sizeof(MyType) words` long.
 --> 
 Converting []T to []interface{} would involve creating a new slice of interface{} values which is a non-trivial operation since the in-memory layout is completely different.
 
 
 - example from [stackoverflow](https://stackoverflow.com/questions/12994679/slice-of-struct-slice-of-interface-it-implements)
+
+#### How to Solve
+
+If you want a container for an arbitrary array type, and you plan on changing back to the original type before doing any indexing operations, you can just use an interface{}. The code will be generic (if not compile-time type-safe) and fast.
+
+If you really want a []interface{} because you'll be doing indexing before converting back, or you are using a particular interface type and you want to use its methods, you will have to make a copy of the slice. See the example code above.
 
 
 ### Interfaces and Structs
