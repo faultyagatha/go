@@ -56,6 +56,29 @@ func sliceAppend() {
 	sli = append(sli, 100)
 }
 
+// removeIndexByCopying creates a deep copy 
+// of the slice and removes an element from
+// the copy. This is done so that the original
+// array will not being modified (in Go, slice 
+// is a pointer to the array)
+func removeIndexByCopying(s []int, index int)[]int {
+	// Make a copy of the original slice
+	ret := make([]int, 0)
+	// append everything before the index
+  ret = append(ret, s[:index]...)
+	// append everything after the index
+  return append(ret, s[index+1:]...)
+}
+
+// removeIndex is an idiomatic way of removing
+// element from the slice in Go.
+// Note: when using this method, the original
+// slice MUST be reassigned (otherwise, the original
+// slice will be modified as well!!!)
+func removeIndex(s []int, index int) []int {
+	return append(s[:index], s[index+1:]...)
+}
+
 func namesSlice() {
 	names := [4]string{
 		"John",
@@ -174,5 +197,9 @@ func main() {
 	// p = appendByte2(p, 7, 11, 13)
 	fmt.Printf("p: %d\n", p) // [2 3 5 7 11 13]
 
+	sl2 := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+	// Reassign the original slice to the new 
+	// slice returned after the element is removed
+	sl2 = removeIndex(sl2, 5)
 
 }

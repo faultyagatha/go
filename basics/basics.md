@@ -456,14 +456,69 @@ sl2 := []string{"go", "is", "cooler"}
 sl1 = append(sl1, sl2...) //note the spread operator
 ```
 
-- removing element(s) from a slice
+- removing element(s) from a slice:
 
+1. Non-idiomatic to Go (but the 'right' from cs point of view):
+  - create a copy of the slice to avoid modifying an original slice
+
+```go
+func OriginalRemoveIndex(arr []int, pos int) []int {
+  // Make a copy of the original slice
+  ret := make([]int, 0)
+  // Append everything before the index
+  ret = append(ret, s[:index]...)
+  // Append everything after the index
+  return append(ret, s[index+1:]...)
+}
+
+func main() {
+  original := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+  fmt.Println("original: ", original) //[0 1 2 3 4 5 6 7 8 9]
+  result := result(original, 5)
+
+  fmt.Println("original: ", original) //[0 1 2 3 4 5 6 7 8 9]
+  fmt.Println("result: ", result) //[0 1 2 3 4 6 7 8 9]
+
+  result[0] = 999
+  fmt.Println("original: ", original) //[0 1 2 3 4 5 6 7 9 9]
+  fmt.Println("result: ", result) //[999 1 2 3 4 6 7 8 9]
+}
+```
+
+2. Idiomatic go Go ('re-slicing')
 `slice = append(slice[:i], slice[i+1:]...)`
+- note, this is expensive (as normally, with any array), so use sparringly
+
+```go
+func RemoveIndex(s []int, index int) []int {
+    return append(s[:index], s[index+1:]...)
+}
+
+func main() {
+  original := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+  fmt.Println(original) //[0 1 2 3 4 5 6 7 8 9]
+  // IMPORTANT: the original slice must be reassigned
+  // Otherwise --> see above (1.)
+  original = RemoveIndex(original, 5)
+  fmt.Println(original) //[0 1 2 3 4 6 7 8 9]
+}
+```
 
 ```go
 sl := []string{"keep", "keep", "remove", "keep"}
 sl = append(sl[:2], sl[3:]...) //note the spread operator
 //to remove the range, use the same approach
+```
+
+3. Use `Delete()` member function on slices (since Go 1.21)
+- this is just a wrapper function to `append(s[:index], s[index+1:]...)`
+
+```go
+slice := []int{1, 2, 3, 4}
+// IMPORTANT: the original slice must be reassigned
+// Otherwise --> see above (1.)
+slice = slices.Delete(slice, 1, 2)
+fmt.Println(slice) // [1 3 4]
 ```
 
 ### Maps
