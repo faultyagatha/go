@@ -983,6 +983,47 @@ res := Panic(wrongAccess)
 % go install
 ```
 
+- in some cases, when go work is used and some other external modules should be installed (e.g., the root folder consists of many subfolders with small projects that use some other modules that must be installed), having go.mod in the root folder will not work --> 
+
+```
+├── LICENSE
+├── README.md
+├── go.work
+├── project_1
+│   ├── go.mod
+│   └── go.sum
+|   └── main.go
+├── project_2
+│   ├── go.mod
+│   └── go.sum
+|   └── main.go
+├── project_3
+│   ├── go.mod
+│   └── go.sum
+|   └── main.go
+```
+
+this means, create go.mod for each folder that has some external dependencies and then add them to go.work
+
+```shell
+# setup path to project_1 in the workspace
+cd project_1
+go mod init github/faultyagatha/myrepo/project_1
+go get github/somedependency
+cd ..
+go work use ./project_1
+
+# setup path to project_2 in the workspace
+cd project_2
+go mod init github/faultyagatha/myrepo/project_2
+go get github/somedependency
+cd ..
+go work use ./project_2
+
+# setup path to project_3 in the workspace ... 
+```
+
+
 ## OOP
 
 - polymorphism is achieved with `structs` that can have member functions (sort of). It's done externally, in the code (see examples).
