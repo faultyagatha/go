@@ -116,5 +116,10 @@ switch t := t.(type) {
 
 ```
 
+## Slices
+
+- wrap arrays and hold reference to an underlying array
+- if you assign one slice to another, both refer to the same array
+- if a function takes a slice argument, changes it makes to the elements of the slice will be visible to the caller, analogous to passing a pointer to the underlying array.
 
 [effective go](https://go.dev/doc/effective_go)

@@ -27,6 +27,17 @@ func simpleWrite() {
 	fmt.Println("err: ", e)
 }
 
+func readFile(filename string) (string, error) {
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+
+	fmt.Println(string(data))
+	return string(data), nil
+}
+
 func readWriteOs() {
 	f, err := os.Create("test2.txt")
 	if err != nil {
@@ -51,4 +62,5 @@ func main() {
 	simpleWrite()
 	simpleRead()
 	readWriteOs()
+	readFile("test.txt")
 }

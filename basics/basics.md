@@ -1562,6 +1562,12 @@ fmt.Printf("%q\n", coral) // ["blue coral" "staghorn coral" "pillar coral" "elkh
 
 [linter](https://golangci-lint.run/)
 
+Generate unit tests using VS Code Go Extension:
+
+1. `SHIFT + CMD + P`
+2. Go:Generate Unit Tests ... (choose what is needed)
+
+
 
 ## Libs
 
