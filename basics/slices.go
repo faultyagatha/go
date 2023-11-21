@@ -56,18 +56,18 @@ func sliceAppend() {
 	sli = append(sli, 100)
 }
 
-// removeIndexByCopying creates a deep copy 
+// removeIndexByCopying creates a deep copy
 // of the slice and removes an element from
 // the copy. This is done so that the original
-// array will not being modified (in Go, slice 
+// array will not being modified (in Go, slice
 // is a pointer to the array)
-func removeIndexByCopying(s []int, index int)[]int {
+func removeIndexByCopying(s []int, index int) []int {
 	// Make a copy of the original slice
 	ret := make([]int, 0)
 	// append everything before the index
-  ret = append(ret, s[:index]...)
+	ret = append(ret, s[:index]...)
 	// append everything after the index
-  return append(ret, s[index+1:]...)
+	return append(ret, s[index+1:]...)
 }
 
 // removeIndex is an idiomatic way of removing
@@ -153,10 +153,10 @@ func appendByte1(slice []byte, data ...byte) []byte {
 	m := len(slice)
 	n := m + len(data)
 	if n > cap(slice) { // if necessary, reallocate
-			// allocate double what's needed, for future growth.
-			newSlice := make([]byte, (n+1)*2)
-			copy(newSlice, slice)
-			slice = newSlice
+		// allocate double what's needed, for future growth.
+		newSlice := make([]byte, (n+1)*2)
+		copy(newSlice, slice)
+		slice = newSlice
 	}
 	slice = slice[0:n]
 	copy(slice[m:n], data)
@@ -165,7 +165,7 @@ func appendByte1(slice []byte, data ...byte) []byte {
 
 func appendByte2(slice []byte, data ...byte) []byte {
 	// using in-built append
-	
+
 	slice = append(slice, data...)
 	return slice
 }
@@ -181,13 +181,13 @@ func main() {
 	reverse(a)
 	fmt.Println(a)
 
-	var arr[] int = []int{1,2,3}
+	var arr []int = []int{1, 2, 3}
 	sl := arr[:3]
 	fmt.Printf("%d\n", sl)
 
 	var arr2 = []int{0, 1, 2, 3, 4, 5, 6, 7}
 	var s = make([]int, 6)
-	n1 := copy(s, arr2[0:]) 
+	n1 := copy(s, arr2[0:])
 	fmt.Printf("n1: %d\n", n1)
 	n2 := copy(s, s[2:])
 	fmt.Printf("n2: %d\n", n2)
@@ -198,7 +198,7 @@ func main() {
 	fmt.Printf("p: %d\n", p) // [2 3 5 7 11 13]
 
 	sl2 := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-	// Reassign the original slice to the new 
+	// Reassign the original slice to the new
 	// slice returned after the element is removed
 	sl2 = removeIndex(sl2, 5)
 
