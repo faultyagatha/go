@@ -317,23 +317,48 @@ func main() {
 - we need a way of comminicating between goroutines
 ----
 
-### Ubuffered Channels
+### Channels
 
-- `channels` is the key data-type for synchronising and passing messages between goroutines
-- under the hood, channels are queues with a logical interface of `send()` and `recv()`
-- `channels` transfer data `synchroniously` between goroutines
+- channels is the `key data-type for synchronising and passing messages between goroutines`
+- under the hood, channels are `queues` with a logical interface of `send()` and `recv()`
+- channels `transfer data synchroniously` between goroutines
 - channels `are typed` and transfer `typed data`
-- passing a pointer between channels is idiomatic in Go
+- `passing a pointer between channels is idiomatic` in Go
 - `make()` creates a channel
 - send and receive data using `<-` operator
+- `reading` an item from the channel is equal to `read and remove` (think queue)
+- there is no way to peek the items
+- there is no way to see how many items are currently on a channel
+
+> If the channel is `empty` and `open`, reading from the channel `will block until an item is available`. If an item is never added to the channel (and the channel remains open), the result is an operation that will `hang`(!!!) Note: this is not the case if the channel is closed (see below).
 
 ```go
-// create a channel
+// Read from a channel until it's closed
+for {
+  prime, ok := <-ch
+  if !ok {
+    break
+  }
+  fmt.Println(prime)
+}
+
+// Alternative with range
+for prime := range ch {
+  fmt.Println(prime)
+}
+```
+
+### Ubuffered Channels
+
+```go
+// create a channel of capacity 1 --> it can fit only 1 int
 c := make(chan int)
 
-// send data on a channel (follow the arrow to see where the data goes)
+// send data on a channel, e.g., enqueue
+// (follow the arrow to see where the data goes - into the channel)
 c <- 3
-// receive data from a channel (follow the arrow to see where the data goes)
+// receive data from a channel and save it in the var, e.g., dequeue 
+// (follow the arrow to see where the data goes - out of the channel)
 x := <- c
 ```
 
@@ -359,6 +384,7 @@ func main() {
 	fmt.Printf("Main routine %d\n", res3)
 }
 ```
+
 - by default, channels in go are `unbuffered`
 - unbuffered channels require both sending and receiving goroutine to be ready at the same instance before any send or receive operation is complete -->
 - unbuffered channels cannot hold data in transit --> 
@@ -398,3 +424,113 @@ for i := range c {
 ```
 
 - it is possible to receive from multiple resources
+
+### Indicating How a Channel will Be Used
+
+- the arrow pointing toward "chan" parameter in the function indicates that the `function will only put items onto a channel` and will not take items off of the channel.
+
+```go
+func calculateNextPrime(lastPrime int, ch chan<- int) {
+  nextPrime := getNextPrime(lastPrime)
+  ch <- nextPrime
+}
+```
+
+- indicating a direction is not required
+- we can use a bi-directional channel as a parameter for a function
+- indicating a direction gives us some safety: if we try to take an item off of the channel in the function above, we will get a compiler error.
+
+### Closing a Channel
+
+- done by using `close()`:
+- trying to write to a channel that has been closed results in a `panic`
+- if the closed channel still contains items, we can continue to take items off of the channel
+- once the channel is empty, if we try to take an item, it will not block but it will result in the inconsistent values --> need a way to know if the channel has been closed.
+
+```go
+// Idiomatic way to check if the channel is closed
+prime, ok := <-ch
+if !ok {
+  // channel is closed and "prime" is not valid
+}
+```
+
+- problem: where is a good place to close a channel? 
+
+```go
+func fetchPersonToChannel(id int, ch chan<- person) {
+  p, err := getPerson(id)
+  if err != nil {
+    log.Printf("err calling getPerson(%d): %v", id, err)
+    return
+  }
+  ch <- p
+}
+
+func main() {
+  ch := make(chan person, 10)
+  // Put values onto a channel
+  for _, id := range ids {
+    // The loop continues without waiting for each call 
+    // to "fetchPersonToChannel" to complete (concurrent operation)
+    go fetchPersonToChannel(id, ch)
+  }
+
+  // Closing a channel here will cause panic because
+  // the concurrent operations may not be complete at that point
+
+  // Read values from the channel
+  for p := range ch {
+    fmt.Printf("%d: %v\n", p.ID, p)
+  }
+}
+```
+
+- solution 1: use `WaitGroup`
+
+```go
+func fetchPersonToChannel(id int, ch chan<- person, wg *sync.WaitGroup) {
+  // Decrements the counter
+  defer wg.Done()
+  p, err := getPerson(id)
+  if err != nil {
+    log.Printf("err calling getPerson(%d): %v", id, err)
+    return
+  }
+  ch <- p
+}
+
+func main() {
+  ch := make(chan person, 10)
+  var wg sync.WaitGroup
+
+  // Put values onto a channel
+  for _, id := range ids {
+    // Increment a counter (10 times)
+    wg.Add(1)
+    // Need to pass a pointer to the WaitGroup so that 
+    // it can be updated from within the function
+    go fetchPersonToChannel(id, ch, &wg)
+  }
+  // Waits until the counter reaches 0
+  wg.Wait()
+  // After the WaitGroup counter reaches zero,
+  // the channel will be closed
+  close(ch)
+
+  // Read values from the channel
+  for p := range ch {
+    fmt.Printf("%d: %v\n", p.ID, p)
+  }
+}
+```
+
+1. When the first "for" loop runs, the counter is incremented (with "wg.Add") before each goroutine is started. In this case, it quickly increases the counter to 9.
+2. The code hits the "wg.Wait()" call and pauses.
+3. Inside each goroutine, the counter is decremented (with "wg.Done"). The counter decreases until it reaches zero.
+4. When the counter reaches zero, "wg.Wait()" stops waiting and the channel is closed.
+5. The second "for" loop reads items from the channel.
+6. Since the channel is closed, the for loop will exit once all of the values have been read from the channel.
+
+
+[channels explained simple](https://jeremybytes.blogspot.com/2021/01/go-golang-channels-moving-data-between.html)
