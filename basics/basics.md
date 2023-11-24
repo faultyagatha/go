@@ -83,7 +83,9 @@ or use a shortcut: `go run helloworld.go`
 
 > When opening a directory in VSCode that consists of multiple Go projects the following error appears: `gopls requires a module at the root of your workspace...` 
 
-From Go 1.18 onwards there is native support for multi-module workspaces. This is done by having a `go.work` file present in your parent directory.
+- from Go 1.18 onwards there is native support for multi-module workspaces. This is done by having a `go.work` file present in your parent directory.
+
+- `go.work` file overrides the `go.mod` file
 
 > In workspace mode, the go. work file will be used to determine the set of main modules used as the roots for module resolution, instead of using the normally-found go.mod file to specify the single main module. 
 
@@ -121,6 +123,8 @@ use (
     ./project-two
 )
 ```
+
+[tutorial workspaces](https://go.dev/doc/tutorial/workspaces)
 
 ### Change a version of go.mod
 
@@ -1475,6 +1479,17 @@ func main() {
 `Unbuffered channel`: the sender will block until the receiver receives the data from the channel; the receiver will also block until the sender sends the data into the channel
 
 `Buffered channel`: the sender will block when there is not empty slot of the channel; the receiver will block the channel when it is empty.
+
+## Writing / Reading File
+
+> In many contexts, a `write` operation will only write to a local buffer, for instance within a user program. --> We may need to `flush` the buffer, for instance to provide the buffered data to the operating system in one fell swoop. Buffering can be more efficient by batching expensive operations, however it can also introduce hazards if we're not aware of when exactly buffers get flushed.
+
+- file reading and writing is done via `os` package
+- `os.File` doesn't have a `.Flush()` because it isn't buffered. `Writes` to it `are direct syscalls` to write to the file.
+
+- when a program exits (even if it crashes) all files it has open will be closed automatically by the operating system, and the file system will write your changes to disk when it gets around to it (sometimes up to few minutes after your program exits).
+
+- calling `os.File.Sync()` will call the `fsync()` syscall which will force the file system to flush it's buffers to disk. This will guarantee that your data is on disk and persistent even if the system is powered down or the operating system crashes.
 
 ## Print formatting
 
