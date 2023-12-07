@@ -1570,7 +1570,32 @@ fmt.Printf("%q\n", coral) // ["blue coral" "staghorn coral" "pillar coral" "elkh
 
 ## Debugging
 
+launch.json setup:
+```json
+{
+  "version": "0.2.0",
+    "configurations": [
+    {
+      "type": "go",
+      "request": "launch",
+      "name": "Golang: Configure project",
+      "mode": "debug",
+      "program": "${workspaceFolder}/main.go"
+    },
+  ]
+}
+```
+
+`"${workspaceFolder}/main.go"`  leads to:
+
+/Users/myUser/Documents/github/go
+├── main.go
+
 [VS Code](https://www.youtube.com/watch?v=6r08zGi38Tk&list=PLj6YeMhvp2S40Q-TEPEKOeypLvTVd5uME&index=2&ab_channel=VisualStudioCode)
+
+[debugging in VS Code](https://code.visualstudio.com/docs/editor/debugging)
+
+[debug local process](https://vscode-debug-specs.github.io/go/)
 
 [delve](https://github.com/go-delve/delve/tree/master)
 
