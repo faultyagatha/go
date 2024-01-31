@@ -173,3 +173,5 @@ In the case of modlib this would mean no subdirectories with user-importable pac
 > Sidenote: In many projects, there is a `pkg/` dir. In the majority of cases it's an antipattern. 
 
 The code you place in pkg/ should almost certainly be in internal/ instead. If your project is a large top-level application, it shouldn't have importable packages; instead, importable packages should be split out to separate repositories which are small, self-contained and reusable.
+
+[standard layout golang](https://github.com/golang-standards/project-layout)

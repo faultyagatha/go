@@ -1081,6 +1081,8 @@ cd ..
 go work use ./project_2
 
 # setup path to project_3 in the workspace ... 
+
+# note: the path must be to the project folder that has go.mod file (e.g., if the project_1 had a subfolder src, where go.mod would be, the command would have been go work use ./project_1/src)
 ```
 
 
