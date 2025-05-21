@@ -159,6 +159,35 @@ Example: if the repository contains the source code of the website of the projec
 
 - Go tooling recognizes internal as a special path
 
+Example with the current folder structure:
+
+```
+go/
+│
+├── basics/
+│   ├── go.mod
+│   └── arrays/
+│       └── main.go
+│   └── closures/
+│       └── main.go
+│
+├── concurrency/
+│   ├── go.mod
+│   └── buffered/
+│       └── main.go
+│   └── channels/
+│       └── main.go
+│
+├── modules/
+│   ├── go.mod
+│   └── moduleone/
+│       └── moduleone.go
+│   └── main/
+│       └── main.go
+│
+├── go.work
+```
+
 ### Package Nesting
 
 - can go as deep as you need
