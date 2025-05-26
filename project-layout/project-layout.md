@@ -17,6 +17,7 @@ module github.com/eliben/modlib
 ```
 ### Project layout
 
+Example of one project with different modules:
 ```
 ├── LICENSE
 ├── README.md
@@ -159,7 +160,7 @@ Example: if the repository contains the source code of the website of the projec
 
 - Go tooling recognizes internal as a special path
 
-Example with the current folder structure:
+Example with the current folder structure: standalone go projects
 
 ```
 go/
@@ -187,6 +188,58 @@ go/
 │
 ├── go.work
 ```
+**Go Mod vs Go Work**
+
+`go mod` 
+
+— required per module
+- defines a Go module (unit of code + its dependencies)
+- every Go project that you go run, go build, or go test must have a go.mod
+- the core of Go's dependency system since Go 1.11
+- `go mod init github.com/you/project-name`
+
+`go work` 
+
+- optional helper for multiple modules
+- introduced in Go 1.18+
+- lets you combine multiple Go modules into a single workspace, so local modules can import each other without requiring a version/tag/push.
+- good for monorepos, learning repos, or polyglot projects with multiple Go tools.
+- `go work init ./mod1 ./mod2`
+- Use it if:
+  - You have multiple go.mod files in the same repo.
+  - One Go module depends on another.
+  - You want to develop and test them together easily.
+
+Rule of Thumb!!
+> `Always use go mod`. Use go work when you have multiple modules and want to work with them together locally.
+
+Example:
+```
+my-projects/
+│
+├── mod-a/          ← has go.mod
+├── mod-b/          ← has go.mod (imports mod-a)
+├── go.work         ← optional, links both
+
+```
+
+```bash
+cd my-projects
+cd mod-a
+go mod init github.com/yourname/mod-a
+cd ../mod-b
+go mod init github.com/yourname/mod-b
+go get github.com/yourname/mod-a@v0.0.0
+cd ..
+
+go work init ./mod-a ./mod-b
+# or if the go mod already exist, just add the project go work use ./path/to/module
+go work use ./mod-a
+go work use ./mod-b
+
+go run ./mod-b
+```
+
 
 ### Package Nesting
 
