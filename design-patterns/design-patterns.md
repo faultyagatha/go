@@ -72,11 +72,18 @@
 - iterator is a type that facilitates the traversal
     - it keeps a pointer to the current element
     - it knows how to move to a different element
-- solves the problem of accessing and traversing the elements of an aggregate object without exposing its representation (data structures)
-- with iterator, new traversal operations can be defined for an aggregate object without changing its interface
+- solves the problem of `accessing and traversing the elements of an aggregate object` (like a list or a collection) `without exposing its representation` (data structures)
+- provides `a uniform interface for traversal` --> with iterator, new traversal operations can be defined for an aggregate object without changing its interface
+- supports multiple traversal algorithms or directions (forward/backward)
 - iterator pattern defines a separate (iterator) object that encapsulates accessing and traversing an aggregate object
 - iterator moves along the iterated collection, indicating when last element has been reached
 - in go, there is no standard Iterable interface; iteration can be achieved with `range` - in-built iterator for iterable objects
+
+Typically involves:
+- Iterator Interface: Defines Next(), HasNext(), etc.
+- Concrete Iterator: Implements the above interface
+- Aggregate Interface: Defines method to return an iterator
+- Concrete Aggregate: Stores elements and returns the iterator
 
 2. `Observer`:
 - solves the need to be informed when certain things happen
@@ -89,7 +96,7 @@
 - observable is the entity generating the events
 - common application in Go: send a notification when any property of a struct has changed
 
-2. `State`:
+3. `State`:
 - a pattern in which the object's behaviour is determined by its state
 - changes in state can be explicit or in response to event (see observer pattern)
 - an object transitions from one state to another (a trigger, action)

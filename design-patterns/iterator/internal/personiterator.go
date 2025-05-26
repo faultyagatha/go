@@ -1,6 +1,4 @@
-package main
-
-import "fmt"
+package internal
 
 type Person struct {
 	FirstName, MiddleName, LastName string
@@ -10,7 +8,8 @@ type Person struct {
 // NamesSlice is a simple
 // iterable that iterates
 // over Person
-//  ---------------
+//
+//	---------------
 func (p *Person) NamesSlice() <-chan string {
 	out := make(chan string)
 	go func() {
@@ -44,18 +43,18 @@ type PersonNamesIterator struct {
 	current int
 }
 
-//factory function that initialises PersonNamesIterator
+// factory function that initialises PersonNamesIterator
 func NewPersonNameIterator(person *Person) *PersonNamesIterator {
 	return &PersonNamesIterator{person, -1}
 }
 
-//function that returns the value
+// function that returns the value
 func (p *PersonNamesIterator) MoveNext() bool {
 	p.current++
 	return p.current < 3
 }
 
-//function that checks if there is next value
+// function that checks if there is next value
 func (p *PersonNamesIterator) Value() string {
 	switch p.current {
 	case 0:
@@ -66,17 +65,4 @@ func (p *PersonNamesIterator) Value() string {
 		return p.person.LastName
 	}
 	panic("We should not get here")
-}
-
-func main() {
-	p := Person{"Alexander", "Graham", "Bell"}
-	//custom iterator:
-	for it := NewPersonNameIterator(&p); it.MoveNext(); {
-		fmt.Println(it.Value())
-	}
-	/*
-		for _, name := range p.Names() {
-			fmt.Println(name)
-		}
-	*/
 }

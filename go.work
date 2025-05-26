@@ -1,6 +1,7 @@
 go 1.21.5
 
 use (
+	./design-patterns
 	./project-layout/my-projects/mod-a
 	./project-layout/my-projects/mod-b
 )
